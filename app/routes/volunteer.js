@@ -1,5 +1,4 @@
-var Volunteer = require('../models/volunteer'),
-	SchemaParser = require('../modules/schemaParser');
+var Volunteer = require('../models/volunteer');
 
 module.exports = function(app) {
 
