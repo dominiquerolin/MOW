@@ -1,0 +1,17 @@
+
+		<h2>Register</h2>
+		<form novalidate name="addForm" ng-submit="addForm.$valid && addVolunteer(formData)">
+			<div ng-show="{{error.status}}" class="bg-danger">{{error.message}}</div>
+			<div class="form-group">
+				<label for="username">Username</label> <input type="text"
+					id="username" name="username" class="form-control"
+					placeholder="Enter username" ng-model="formData.username" required>
+			</div>
+			<div class="form-group">
+				<label for="email">Email</label> <input type="email" id="email"
+					name="email" class="form-control" placeholder="Enter email"
+					ng-model="formData.email" required>
+			</div>
+			<button type="submit" class="btn btn-default">Add</button>
+
+		</form>

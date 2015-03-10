@@ -1,0 +1,11 @@
+<h2>Profile for {{v.username}}</h2>
+<form novalidate name="updateForm"
+	ng-submit="updateForm.$idValid && updateVolunteer(v)">
+	<div class="form-group" ng-repeat="(key,value) in v" ng-hide="key.indexOf('_')!=-1">
+		<label for="{{key}}">{{key}}</label>
+		<input ng-model="v[key]" class="form-control" type="text" id="{{key}}" name="{{key}}" value="{{value}}">
+	</div>
+	<input type="submit" value="Update" />
+	{{v}}
+	{{s}}
+</form>
