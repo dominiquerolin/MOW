@@ -8,8 +8,8 @@ angular.module('appRoutes', [])
 	        })
 	
 	        .when('/volunteers/:username', {
-	            templateUrl: 'views/volunteer/edit.html',
-	            controller: 'VolunteerProfileCtrl'
+	            templateUrl: 'views/volunteer/details.html',
+	            controller: 'VolunteerDetailsCtrl'
 	        })
 	
 	        .when('/volunteers', {
@@ -17,8 +17,8 @@ angular.module('appRoutes', [])
 	            controller: 'VolunteerListCtrl'
 	        })
 		    .when('/register', {
-		        templateUrl: 'views/volunteer/add.html',
-	            controller: 'VolunteerFormCtrl'
+		        templateUrl: 'views/volunteer/register.html',
+	            controller: 'VolunteerRegisterFormCtrl'
 		    });
 	
 	    $locationProvider.html5Mode(true);

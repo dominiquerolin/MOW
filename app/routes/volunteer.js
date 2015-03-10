@@ -11,17 +11,13 @@ module.exports = function(app) {
 			if (err)
 				return next(err);
 			else
-				SchemaParser(Volunteer.schema, function(err, schema) {
-					if(err) 
-						throw(err);
-					else 
-						res.json({'data':data, 'schema': schema });
-			});
+				res.json(data);
 		});
 	});
 
 	// update volunteer by id
 	app.put('/api/volunteers/:id', function(req, res,next) {
+		console.log('Update in DB');
 		Volunteer.findByIdAndUpdate(req.params.id, req.body, function(err, data) {
 			if (err)
 				return next(err);

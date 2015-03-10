@@ -1,0 +1,93 @@
+<div ng-class="{'bg-danger': {{error.status}}, 'bg-success': !{{error.status}}}">{{error.message}}</div>
+
+<form role="form" class="form-horizontal" novalidate 
+	name="updateForm"	
+	ng-submit="updateInfo(updateForm.$valid)"
+	ng-init="email_changed=false;">
+	
+	<h2>Contact information for {{v.username}}</h2>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Username</label>
+		<div class="col-sm-4"><input name="username" type="text" ng-model="v.username" class="form-control" disabled></div>
+		<div class="col-sm-6"></div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Email</label>
+		<div class="col-sm-4"><input name="email" type="email" ng-model="v.email" class="form-control" required ng-change="email_changed = true"></div>
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.email">Email is required.</span>
+			<span class="text-danger" ng-show="updateForm.$submitted && updateForm.email.$invalid">Email is invalid.</span>
+		</div>
+	</div>
+	<div class="form-group" ng-show="{{email_changed}}">
+		<label class="control-label col-sm-2"></label>
+		<div class="col-sm-4"><input name="email_confirm" type="email" ng-model="v.email_confirm" class="form-control" compare-to="email_changed ? v.email : null" placeholder="Confirm Email"></div>
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.email_confirm">Confirm Email is required.</span>
+			<span class="text-danger" ng-show="updateForm.$submitted && updateForm.email_confirm.$invalid">Confirm Email is invalid.</span>
+			<span class="text-danger" ng-show="updateForm.$submitted && v.email_confirm!=v.email">Confirm Email doesn't match Email.</span>
+		</div>
+
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Address</label>
+		<div class="col-sm-4"><input name="address_line1" type="text" ng-model="v.address.line1" class="form-control" required></div>		
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.address.line1">Address is required.</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2"></label>
+		<div class="col-sm-4"><input name="address_line2" type="text" ng-model="v.address.line2" class="form-control"></div>
+		<div class="col-sm-6"></div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">City/Zip</label>
+		<div class="col-sm-3"><input  name="city" type="text" ng-model="v.address.city" class="form-control" required></div>
+		<div class="col-sm-1"><input  name="zip" type="text" ng-model="v.address.zip" class="form-control" ng-pattern="/^\d{4}$/" required></div>
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.address.zip">Zip is required.</span>
+			<span class="text-danger" ng-show="updateForm.$submitted && v.address.zip.$invalid">Zip is invalid.</span>
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.address.city">City is required.</span>
+		</div>
+	</div>
+	<div class="form-group" ng-repeat="phone in v.phone track by $index">
+		<label class="control-label col-sm-2"><span ng-show="$index==0">Phone</span></label>
+		<div class="col-sm-3"><input name="phone_{{$index}}" type="text" ng-model="v.phone[$index]" class="form-control" ng-pattern="/^\d{10}$/" value="{{phone}}" ng-required="v.phone.length==1"></div>
+		<div class="col-sm-1">
+			<span ng-click="removePhone($index)" ng-show="v.phone.length>1 && $index!=v.phone.length-1"  class="glyphicon glyphicon-minus btn btn-danger btn-xs" ></span>
+			<span ng-click="addPhone(updateForm['phone_'+$index].$valid)" ng-show="$index==v.phone.length-1" class="glyphicon glyphicon-plus btn btn-success btn-xs" ></span>
+		</div>
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && v.phone.length==1 && v.phone[$index]==null">Phone is required.</span>
+			<span class="text-danger" ng-show="updateForm.$submitted && updateForm['phone_'+$index].$dirty && updateForm['phone_'+$index].$invalid">Phone is invalid.</span>
+		</div>
+	</div>
+	<h2>Car information</h2>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Registration</label>
+		<div class="col-sm-4"><input name="car_registration" type="text" ng-model="v.car.registration" class="form-control" required></div>		
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.car.registration">Registration is required.</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Insurer</label>
+		<div class="col-sm-4"><input name="car_insurer" type="text" ng-model="v.car.insurance.insurer" class="form-control" required></div>		
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.car.insurance.insurer">Insurer is required.</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Policy Nr.</label>
+		<div class="col-sm-4"><input name="car_policy_nr" type="text" ng-model="v.car.insurance.policy_nr" class="form-control" required></div>		
+		<div class="col-sm-6">
+			<span class="text-danger" ng-show="updateForm.$submitted && !v.car.insurance.policy_nr">Policy Nr. is required.</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-6">
+			<input type="submit" value="Update" class="btn btn-primary pull-right" >
+		</div>
+	</div>
+</form>
