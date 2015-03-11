@@ -1,0 +1,33 @@
+<h2>Car information  for {{v.username}}</h2>
+	<form role="form" class="form-horizontal" novalidate 
+		name="carForm"	
+		ng-submit="carForm.$dirty && updateInfo(carForm.$valid)">
+		
+		<alert></alert>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Registration</label>
+			<div class="col-sm-4"><input name="car_registration" type="text" ng-model="v.car.registration" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="carForm.$dirty && carForm.$submitted">
+				<span class="text-danger" ng-show=" !v.car.registration">Registration is required.</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Insurer</label>
+			<div class="col-sm-4"><input name="car_insurer" type="text" ng-model="v.car.insurance.insurer" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="carForm.$dirty && carForm.$submitted">
+				<span class="text-danger" ng-show=" !v.car.insurance.insurer">Insurer is required.</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Policy Nr.</label>
+			<div class="col-sm-4"><input name="car_policy_nr" type="text" ng-model="v.car.insurance.policy_nr" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="carForm.$dirty && carForm.$submitted">
+				<span class="text-danger" ng-show="!v.car.insurance.policy_nr">Policy Nr. is required.</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-6">
+				<input type="submit" value="Update" class="btn btn-primary pull-right" >
+			</div>
+		</div>
+	</form>
