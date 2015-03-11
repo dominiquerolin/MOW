@@ -1,28 +1,27 @@
 
-<div ng-class="{'bg-danger': {{error.status}}, 'bg-success': !{{error.status}}}">{{error.message}}</div>
-
 <form role="form" class="form-horizontal" novalidate 
 	name="registerForm"	
-	ng-submit="register(registerForm.$valid)"
+	ng-submit="registerForm.$dirty && register(registerForm.$valid)"
 	ng-init="email_changed=false;">
 	
 	<h2>Register</h2>
+	<alert></alert>
 	<div class="form-group">
 		<label class="control-label col-sm-2">Username</label>
 		<div class="col-sm-4"><input name="username" type="text" ng-model="v.username" class="form-control" placeholder="Enter Username" ng-pattern="/^[a-z0-9]+[a-z0-9\.\-]+[a-z0-9]+$/i" ng-minlength="3" ng-maxlength="32"></div>
-		<div class="col-sm-6" ng-show="registerForm.$submitted">
+		<div class="col-sm-6" ng-show="registerForm.$dirty && registerForm.$submitted">
 			<span class="text-danger" ng-show="!registerForm.username.$viewValue">Username is required.</span>
 			<span ng-show="registerForm.username.$viewValue">
 				<span class="text-danger" ng-show="registerForm.username.$error.minlength">Username must be at least 3 characters.</span>
 				<span class="text-danger" ng-show="registerForm.username.$error.maxlength">Username must be 32 characters or less.</span>
-				<span class="text-danger" ng-show="registerForm.username.$error.pattern">Username is invalid: authorized characters are {A-Z} {0-9} {dot} {dash} {underscore}.</span>
+				<span class="text-danger" ng-show="!registerForm.username.$error.minlength && !registerForm.username.$error.maxlength && registerForm.username.$error.pattern">Username is invalid: authorized characters are {A-Z} {0-9} {dot} {dash} {underscore}.</span>
 			</span>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-2">Email</label>
 		<div class="col-sm-4"><input name="email" type="email" ng-model="v.email" class="form-control" required placeholder="Enter Email" ng-change="email_changed = true"></div>
-		<div class="col-sm-6" ng-show="registerForm.$submitted">
+		<div class="col-sm-6" ng-show="registerForm.$dirty && registerForm.$submitted">
 			<span class="text-danger" ng-show="!registerForm.email.$viewValue">Email is required.</span>
 			<span class="text-danger" ng-show="registerForm.email.$viewValue && registerForm.email.$invalid">Email is invalid.</span>
 		</div>
@@ -30,7 +29,7 @@
 	<div class="form-group">
 		<label class="control-label col-sm-2"></label>
 		<div class="col-sm-4"><input name="email_confirm" type="email" ng-model="v.email_confirm" class="form-control" compare-to="v.email" placeholder="Confirm Email"></div>
-		<div class="col-sm-6" ng-show="registerForm.$submitted">
+		<div class="col-sm-6" ng-show="registerForm.$dirty && registerForm.$submitted">
 			<span class="text-danger" ng-show="!registerForm.email_confirm.$viewValue">Confirm Email is required.</span>
 			<span class="text-danger" ng-show="registerForm.email_confirm.$viewValue && registerForm.email_confirm.$invalid">Confirm Email is invalid.</span>
 			<span class="text-danger" ng-show="registerForm.email_confirm.$viewValue && registerForm.email_confirm.$error.compare-to">Confirm Email doesn't match Email.</span>

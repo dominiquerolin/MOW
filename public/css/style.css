@@ -4,3 +4,5 @@ form .ng-dirty.ng-valid {
 form .ng-dirty.ng-invalid {
 	border-color:red;
 }
+.alert {margin-bottom:0;}
+.alert .close {font-size:12px;line-height:0;}

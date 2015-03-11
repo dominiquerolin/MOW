@@ -1,5 +1,8 @@
+var FormControllers = angular.module('FormControllers', []);
+FormControllers.controller('FormCtrl', ['$scope', function($scope) {
 
-angular.module.directive("compareTo", function() {
+}])
+.directive("compareTo", function() {
 	return {
 		require : "ngModel",
 		scope : {
@@ -15,5 +18,12 @@ angular.module.directive("compareTo", function() {
 				ngModel.$validate();
 			});
 		}
+	};
+})
+.directive("alert",  function(){
+	
+	return {
+		restrict:'E',
+		templateUrl: 'views/_elements/alert.html'
 	};
 });

@@ -1,4 +1,4 @@
-var VolunteerControllers = angular.module('VolunteerControllers', []);
+var VolunteerControllers = angular.module('VolunteerControllers', ['FormControllers']);
 
 VolunteerControllers.controller('VolunteerListCtrl', [ 
 	'$scope', 
@@ -39,8 +39,8 @@ VolunteerControllers.controller('VolunteerRegisterFormCtrl', [
 	function($scope, $http, $window) {
 		console.log("VolunteerRegisterFormCtrl");
 
-		$scope.error = {
-			status : false,
+		$scope.alert = {
+			error : false,
 			message : null
 		};
 
@@ -52,20 +52,27 @@ VolunteerControllers.controller('VolunteerRegisterFormCtrl', [
 		};
 
 		$scope.register = function(valid) {
-
-			valid && $http.post('/api/volunteers', $scope.v)
-			.success(
-					function(obj) {
-					console.log('Success:', obj);
-					$window.location.href = '/volunteers/'+ obj.username;
-				})
-			.error(function(msg) {
-				console.log(msg);
-				$scope.error = {
-					status : true,
-					message : msg
-				};
-			});
+			if(!valid) {
+				$scope.alert = {
+					error : true,
+					message : 'Please fix the validation errors below.'
+				};				
+			}
+			else {
+				$http.post('/api/volunteers', $scope.v)
+				.success(
+						function(obj) {
+						console.log('Success:', obj);
+						$window.location.href = '/volunteers/'+ obj.username;
+					})
+				.error(function(msg) {
+					console.log(msg);
+					$scope.alert = {
+						error : true,
+						message : msg
+					};
+				});
+			}
 		};
 }]);
 
@@ -76,9 +83,12 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 	function($scope, $http, $routeParams) {
 		console.log("VolunteerDetailsCtrl");
 
-		$scope.error = {
-			status : false,
+		$scope.alert = {
+			error : false,
 			message : null
+		};
+		$scope.init = function() {
+			$scope.email_changed=false;
 		};
 
 		// Display a single volunteer data
@@ -106,7 +116,10 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 			$scope.v.phone[$scope.v.phone.length-1] && $scope.addPhone(true);
 			
 			if(!valid) {
-				console.log('Form has validation errors.');
+				$scope.alert = {
+					error : true,
+					message : 'Please fix the validation errors below.'
+				};
 			} else {
 				console.log("Form OK: update info");
 				var payload = $scope.v;
@@ -115,15 +128,19 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 				.success(
 					function(obj) {
 						console.log('Success:', obj);
-						$scope.error = {
-							status : false,
+						$scope.alert = {
+							error : false,
 							message : 'Update successul!'
 						};
+						$scope.init();
+						$scope.contactForm.$setPristine();
+						$scope.carForm.$setPristine();
+						$scope.availabilityForm.$setPristine();
 				})
 				.error(function(msg) {
 					console.log(msg);
-					$scope.error = {
-						status : true,
+					$scope.alert = {
+						error : true,
 						message : msg
 					};
 				});
@@ -131,22 +148,3 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 		};
 
 	} ]);
-
-VolunteerControllers.directive("compareTo", function() {
-	return {
-		require : "ngModel",
-		scope : {
-			otherModelValue : "=compareTo"
-		},
-		link : function(scope, element, attributes, ngModel) {
-
-			ngModel.$validators.compareTo = function(modelValue) {
-				return modelValue == scope.otherModelValue;
-			};
-
-			scope.$watch("otherModelValue", function() {
-				ngModel.$validate();
-			});
-		}
-	};
-});
