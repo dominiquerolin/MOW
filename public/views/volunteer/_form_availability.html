@@ -5,7 +5,30 @@
 		ng-submit="availabilityForm.$dirty && updateInfo(availabilityForm.$valid)">
 		
 		<alert></alert>
-		
+		{{v.availability.frequency}}
+		<div class="form-group">
+			<label class="control-label col-sm-2">Frequency</label>
+			<div class="col-sm-2" ng-repeat="(o, ord) in ['1st','2d','3rd','4th','5th']">
+				<strong>{{ord}} of the month</strong>
+				<ul>
+					<li ng-repeat="(d,day) in ['Monday','Tuesday','Wednesday','Thursday','Friday']">
+						<input ng-model="v.availability.frequency[o][d]" type="checkbox" name="day[]" value="{{day}}"><span>{{day}}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Preview</label>
+			<div class="col-sm-2" ng-repeat="(m, month) in calendars">				
+				{{m|date:'MMMM yyyy'}}
+				<table class="table">
+					<tr><th ng-repeat="n in ['M','T','W','T','F'] track by $index">{{n}}</th>
+					<tr ng-repeat="(w,week) in month track by $index">
+						<td ng-repeat="(d,day) in week track by $index" ng-init="offset = month[0][d]?0:1" ng-class="{ 'bg-success' : day && v.availability.frequency[w-offset][d] }">{{day}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
 		<div class="form-group">
 			<div class="col-sm-6">
 				<input type="submit" value="Update" class="btn btn-primary pull-right" >

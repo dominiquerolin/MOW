@@ -87,9 +87,6 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 			error : false,
 			message : null
 		};
-		$scope.init = function() {
-			$scope.email_changed=false;
-		};
 
 		// Display a single volunteer data
 		$http.get('/api/volunteers/' + $routeParams.username)
@@ -98,6 +95,19 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 				console.log(data);
 				$scope.v = data;
 				if(!$scope.v.phone || !$scope.v.phone.length) $scope.v.phone = [null];
+
+				$scope.tab=3;
+				$scope.email_changed=false;
+				
+				var today = new Date();
+				$http.get('/api/calendar/2015/'+(today.getMonth()+1)+'-'+(today.getMonth()+3))
+				.success(function(res) { 
+					if(!res.error)
+						$scope.calendars = res.data;
+				})
+				.error(function(data){
+					console.log('Error: ' + data);
+				})
 			})
 		.error(function(data) {
 			console.log('Error: ' + data);
@@ -132,7 +142,7 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 							error : false,
 							message : 'Update successul!'
 						};
-						$scope.init();
+						$scope.email_changed=false;
 						$scope.contactForm.$setPristine();
 						$scope.carForm.$setPristine();
 						$scope.availabilityForm.$setPristine();

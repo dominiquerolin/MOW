@@ -1,4 +1,5 @@
 var Volunteer = require('../models/volunteer');
+var parser = require('../modules/availabilityParser');
 
 module.exports = function(app) {
 
@@ -9,8 +10,13 @@ module.exports = function(app) {
 		Volunteer.where({username:req.params.username}).findOne(function(err, data) {
 			if (err)
 				return next(err);
-			else
+			else {
+				if(data.availability.frequency.length==0) {
+					data.availability.frequency = parser.toArray(0);
+					data.save();
+				}
 				res.json(data);
+			}
 		});
 	});
 

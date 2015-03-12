@@ -4,6 +4,7 @@ var cal = require('../app/modules/calendar.js');
 var bad_date = 'Bad Date';
 var date_march = new Date(2015,2,16,0,0,0);
 var date_first = new Date(2015,2,1,0,0,0);
+var date_monday= new Date(2015,2,2,0,0,0);
 var date_last = new Date(2015,2,31,0,0,0);
 var array_march = [ // March 2015
                   [2,3,4,5,6], // monday to friday only
@@ -55,7 +56,7 @@ describe('Calendar', function(){
 	});
 	describe('#getMonthArray', function(){
 		it('should return false when argument is not a date object', function(){
-			expect(cal.getFirstMonday(bad_date)).to.equal(false);
+			expect(cal.getMonthArray(bad_date)).to.equal(false);
 		});
 		it("should return an array containing all dates for date object month", function(){
 			expect(cal.getMonthArray(date_march)).to.deep.equal(array_march);

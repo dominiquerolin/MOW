@@ -1,5 +1,10 @@
 module.exports = {
-	today : new Date(),
+	format : function( d ){
+		var res = [d.getFullYear()];
+		res.push( ('00' + (d.getMonth()+1)).slice(-2) );
+		res.push( ('00' + d.getDate()).slice(-2) );
+		return res.join('-');
+	},
 	sameDay : function(date1, date2) {
 		return (date1.getFullYear() == date2.getFullYear()
 				&& date1.getMonth() == date2.getMonth() 

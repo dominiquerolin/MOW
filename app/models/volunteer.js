@@ -19,5 +19,9 @@ module.exports = mongoose.model('Volunteer', {
 			insurer : String,
 			policy_nr : String
 		}
+	},
+	availability : {
+		frequency : Array,
+		exceptions : Array
 	}
 });
