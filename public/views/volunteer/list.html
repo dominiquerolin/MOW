@@ -15,7 +15,7 @@
 			<span class="glyphicon glyphicon-edit" ng-click="editVolunteer($index)"></span>
 			<span class="glyphicon glyphicon-user" ng-class="{'text-success':{{v.active}}, 'text-muted':!{{v.active}}}"></span>
 		</td>
-		<td><a href="/volunteers/{{v.username}}">{{v.username}}</a></td>
+		<td><a href='#' ng-click="editVolunteer($index)">{{v.username}}</a></td>
 		<td>{{v.email}}</td>
 		<td>
 		<p>{{v.address.line1}}</p>
