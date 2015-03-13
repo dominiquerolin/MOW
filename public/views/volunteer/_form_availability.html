@@ -2,31 +2,67 @@
 	<h2>Availability for {{v.username}}</h2>
 	<form role="form" class="form-horizontal" novalidate 
 		name="availabilityForm"	
-		ng-submit="availabilityForm.$dirty && updateInfo(availabilityForm.$valid)">
+		ng-submit="updateInfo(availabilityForm.$valid)">
 		
 		<alert></alert>
-		{{v.availability.frequency}}
+		
 		<div class="form-group">
 			<label class="control-label col-sm-2">Frequency</label>
-			<div class="col-sm-2" ng-repeat="(o, ord) in ['1st','2d','3rd','4th','5th']">
-				<strong>{{ord}} of the month</strong>
-				<ul>
-					<li ng-repeat="(d,day) in ['Monday','Tuesday','Wednesday','Thursday','Friday']">
-						<input ng-model="v.availability.frequency[o][d]" type="checkbox" name="day[]" value="{{day}}"><span>{{day}}</span>
-					</li>
-				</ul>
+			<div class="col-sm-7">
+				<table class="table">
+					<thead>
+						<tr><th></th><th ng-repeat="ord in ['1st','2d','3rd','4th','5th']">{{ord}}</th></tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="(d,day) in ['Monday','Tuesday','Wednesday','Thursday','Friday']" >
+							<td>
+								<input type="button" class="btn btn-block" value="{{day}}s" 
+								ng-init="f = frequency(d)" 
+								ng-click="f.toggleAll()" 
+								ng-class="{'btn-info':f.isActiveAll(),'btn-default':!f.isActiveAll()}">
+							</td>
+							<td ng-repeat="o in [0,1,2,3,4]">
+								<span class="btn glyphicon" 
+									  ng-class="{'glyphicon-ok bg-success text-success':f.isActive(o), 'btn-default glyphicon-remove text-muted':!f.isActive(o)}"
+									  ng-click="f.toggle(o)"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> 
+			<div class="col-sm-3">
+				<label>Exceptions</label>
+				<p>Click on the calendars below to add/remove an exception</p>
+					<ul class="list-unstyled" style="height:200px;overflow-y:auto;">
+						<li ng-repeat="date in v.availability.exceptions track by $index">{{date}}</li>
+					</ul>
 			</div>
+			
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">Preview</label>
 			<div class="col-sm-2" ng-repeat="(m, month) in calendars">				
 				{{m|date:'MMMM yyyy'}}
-				<table class="table">
+				<table class="table table-condensed">
 					<tr><th ng-repeat="n in ['M','T','W','T','F'] track by $index">{{n}}</th>
 					<tr ng-repeat="(w,week) in month track by $index">
-						<td ng-repeat="(d,day) in week track by $index" ng-init="offset = month[0][d]?0:1" ng-class="{ 'bg-success' : day && v.availability.frequency[w-offset][d] }">{{day}}</td>
+						<td ng-repeat="(d,day) in week track by $index">
+							<span class="btn btn-xs"
+							ng-init="offset = month[0][d]?0:1;e=exception(m,day);" 
+							ng-class="{ 'bg-success' : day && v.availability.frequency[w-offset][d], 'bg-danger': e.hasException()}"
+							ng-click="e.toggle()">{{day}}</span>
+						</td>
 					</tr>
 				</table>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Prefered route</label>
+			<div class="col-sm-1" ng-repeat="r in [1,2,3,4,5]" >
+				<input type="button" ng-click="v.availability.route.indexOf(r)<0 && v.availability.route.push(r)" value="{{r}}" class="btn btn-default btn-block" ng-class="{'btn-info':v.availability.route.indexOf(r)!=-1}">
+			</div>
+			<div class="col-sm-2">
+				<input type="button" value="no preference" ng-click="v.availability.route=[]" class="btn btn-default btn-block" ng-class="{'btn-info':!v.availability.route.length}">
 			</div>
 		</div>
 		<div class="form-group">

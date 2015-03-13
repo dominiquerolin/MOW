@@ -21,6 +21,7 @@ module.exports = mongoose.model('Volunteer', {
 		}
 	},
 	availability : {
+		route: Array,
 		frequency : Array,
 		exceptions : Array
 	}

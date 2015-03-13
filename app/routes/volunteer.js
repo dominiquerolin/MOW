@@ -11,10 +11,10 @@ module.exports = function(app) {
 			if (err)
 				return next(err);
 			else {
-				if(data.availability.frequency.length==0) {
+				if(!data.availability.frequency || data.availability.frequency.length==0) {
 					data.availability.frequency = parser.toArray(0);
-					data.save();
 				}
+				data.save();
 				res.json(data);
 			}
 		});

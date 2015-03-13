@@ -14,17 +14,14 @@ module.exports = function(app) {
 		// return full year
 		if (!req.params.month) {
 			range = [ 0,11 ];
-			console.log('full year');
 		} else if (Number(req.params.month)) {
 			range = [ parseInt(req.params.month)-1, parseInt(req.params.month)-1 ];
-			console.log('month: ',range);
 		} else {
 			// return month range
 			var tmp = req.params.month.match(/^(\d+)\-(\d+)$/);
 
 			if (tmp && tmp[1]<=12 && tmp[2]<=12 && tmp[1]<=tmp[2])
 				range = [parseInt(tmp[1])-1, parseInt(tmp[2])-1];
-			console.log('range: ',range);
 		}
 
 		if (range.length == 2) {

@@ -5,7 +5,6 @@ VolunteerControllers.controller('VolunteerListCtrl', [
 	'$http',
 	'$window', 
 	function($scope, $http, $window) {
-		console.log("VolunteerListCtrl");
 
 		// when landing on the page, get all volunteers and show them
 		$http.get('/api/volunteers').success(function(data) {
@@ -37,7 +36,6 @@ VolunteerControllers.controller('VolunteerRegisterFormCtrl', [
 	'$http',
 	'$window',
 	function($scope, $http, $window) {
-		console.log("VolunteerRegisterFormCtrl");
 
 		$scope.alert = {
 			error : false,
@@ -62,11 +60,9 @@ VolunteerControllers.controller('VolunteerRegisterFormCtrl', [
 				$http.post('/api/volunteers', $scope.v)
 				.success(
 						function(obj) {
-						console.log('Success:', obj);
 						$window.location.href = '/volunteers/'+ obj.username;
 					})
 				.error(function(msg) {
-					console.log(msg);
 					$scope.alert = {
 						error : true,
 						message : msg
@@ -100,7 +96,7 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 				$scope.email_changed=false;
 				
 				var today = new Date();
-				$http.get('/api/calendar/2015/'+(today.getMonth()+1)+'-'+(today.getMonth()+3))
+				$http.get('/api/calendar/2015/'+(today.getMonth()+1)+'-'+(today.getMonth()+5))
 				.success(function(res) { 
 					if(!res.error)
 						$scope.calendars = res.data;
@@ -114,7 +110,6 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 		});
 
 		$scope.addPhone = function( valid ) {
-			console.log('entry is ', (valid?'valid - add phone':'invalid - do not add phone'));
 			valid && $scope.v.phone.push(null);
 		};
 		$scope.removePhone = function($index) {
@@ -132,9 +127,9 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 				};
 			} else {
 				console.log("Form OK: update info");
-				var payload = $scope.v;
-				payload.phone.splice(-1,1);
-				$http.put('/api/volunteers/' + payload._id, payload)
+				// cleanup phone
+				$scope.v.phone.splice(-1,1);
+				$http.put('/api/volunteers/' + $scope.v._id, $scope.v)
 				.success(
 					function(obj) {
 						console.log('Success:', obj);
@@ -142,10 +137,6 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 							error : false,
 							message : 'Update successul!'
 						};
-						$scope.email_changed=false;
-						$scope.contactForm.$setPristine();
-						$scope.carForm.$setPristine();
-						$scope.availabilityForm.$setPristine();
 				})
 				.error(function(msg) {
 					console.log(msg);
@@ -156,5 +147,45 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 				});
 			}
 		};
-
+		// Days off handler
+		$scope.exception = function(m, d) {
+			this.date = m.substr(0,8)+ ('00'+d).slice(-2);
+			var s = $scope.v.availability.exceptions;
+			this.toggle = function() {
+				if(this.hasException()) {
+					s.splice(s.indexOf(this.date) ,1);
+				} else {
+					s.push(this.date);
+					s.sort();
+				}
+			};
+			this.hasException = function(){
+				return (s.indexOf(this.date)!=-1);
+			};
+			return this;
+		};
+		// Frequency table handler
+		$scope.frequency = function( d ){
+			this.d = d;
+			var f = $scope.v.availability.frequency;
+			this.toggle = function (w) {
+				f[w][this.d] = !f[w][this.d];
+			},
+			this.isActive = function (w) {
+				return f[w][this.d];
+			},
+			this.toggleAll = function(){
+				var current = this.isActiveAll();
+				for(w in f) {
+					f[w][this.d] = !current;
+				}
+			};
+			this.isActiveAll = function() {
+				for(w in f) {
+					if(!f[w][d]) return false;
+				}
+				return true;
+			};
+			return this;
+		};
 	} ]);
