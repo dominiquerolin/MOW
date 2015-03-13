@@ -9,17 +9,8 @@ module.exports = function(app) {
 		Volunteer.where({username:req.params.username}).findOne(function(err, data) {
 			if (err)
 				return next(err);
-			else {
-				if(!data.availability.frequency || data.availability.frequency.length==0) {
-					data.availability.frequency = [[0,0,0,0,0], // mon
-					                               [0,0,0,0,0], // tue
-					                               [0,0,0,0,0], // wed
-					                               [0,0,0,0,0], // thu
-					                               [0,0,0,0,0]]; // fri;
-				}
-				data.save();
+			else
 				res.json(data);
-			}
 		});
 	});
 

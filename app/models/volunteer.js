@@ -22,7 +22,7 @@ module.exports = mongoose.model('Volunteer', {
 	},
 	availability : {
 		route: Array,
-		frequency : Array,
+		frequency : {type: Array, default: [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},
 		exceptions : Array
 	}
 });
