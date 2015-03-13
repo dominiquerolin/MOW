@@ -1,5 +1,4 @@
 var Volunteer = require('../models/volunteer');
-var parser = require('../modules/availabilityParser');
 
 module.exports = function(app) {
 
@@ -12,7 +11,11 @@ module.exports = function(app) {
 				return next(err);
 			else {
 				if(!data.availability.frequency || data.availability.frequency.length==0) {
-					data.availability.frequency = parser.toArray(0);
+					data.availability.frequency = [[0,0,0,0,0], // mon
+					                               [0,0,0,0,0], // tue
+					                               [0,0,0,0,0], // wed
+					                               [0,0,0,0,0], // thu
+					                               [0,0,0,0,0]]; // fri;
 				}
 				data.save();
 				res.json(data);
