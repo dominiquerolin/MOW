@@ -51,17 +51,17 @@
 			<label class="control-label col-sm-2"><span ng-show="$index==0">Phone</span></label>
 			<div class="col-sm-3"><input name="phone_{{$index}}" type="text" ng-model="v.phone[$index]" class="form-control" ng-pattern="/^\d{10}$/" value="{{phone}}" ng-required="v.phone.length==1"></div>
 			<div class="col-sm-1">
-				<span ng-click="removePhone($index)" ng-show="v.phone.length>1 && $index!=v.phone.length-1"  class="glyphicon glyphicon-minus btn btn-danger btn-xs" ></span>
-				<span ng-click="addPhone(contactForm['phone_'+$index].$valid)" ng-show="$index==v.phone.length-1" class="glyphicon glyphicon-plus btn btn-success btn-xs" ></span>
+				<span ng-click="v.phone.splice($index,1) && contactForm.$setDirty()" ng-show="v.phone.length>1 && $index!=v.phone.length-1" class="glyphicon glyphicon-minus btn btn-danger btn-xs" ></span>
+				<span ng-click="contactForm['phone_'+$index].$valid && v.phone.push(null) && contactForm.$setDirty()" ng-show="$index==v.phone.length-1" class="glyphicon glyphicon-plus btn btn-success btn-xs" ></span>
 			</div>
 			<div class="col-sm-6" ng-show="contactForm.$dirty && contactForm.$submitted">
-				<span class="text-danger" ng-show="v.phone.length==1 && v.phone[$index]==null">Phone is required.</span>
-				<span class="text-danger" ng-show="contactForm['phone_'+$index].$dirty && contactForm['phone_'+$index].$invalid">Phone is invalid.</span>
+				<span class="text-danger" ng-show="contactForm['phone_'+$index].$error.required">Phone is required.</span>
+				<span class="text-danger" ng-show="!contactForm['phone_'+$index].$error.required && contactForm['phone_'+$index].$invalid">Phone is invalid.</span>
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-1 col-sm-offset-5">
-				<input type="submit" value="Update" class="btn btn-primary" >
+			<div class="col-sm-2 col-sm-offset-2">
+				<input type="submit" value="Update" class="btn btn-warning btn-block" >
 			</div>
 		</div>
 	</form>
