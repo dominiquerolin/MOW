@@ -1,8 +1,10 @@
-<ul class="nav nav-tabs" role="tablist">
-	<li ng-class="{'active':tab===1}"><a href="#" ng-click="tab = 1;">Contact Info</a></li>
-	<li ng-class="{'active':tab===2}"><a href="#" ng-click="tab = 2">Car Info</a></li>
-	<li ng-class="{'active':tab===3}"><a href="#" ng-click="tab = 3">Availability</a></li>
-</ul>
-<div ng-show="tab === 1" ng-include="'/views/volunteer/_form_contact.html'"></div>
-<div ng-show="tab === 2" ng-include="'/views/volunteer/_form_car.html'"></div>
-<div ng-show="tab === 3" ng-include="'/views/volunteer/_form_availability.html'"></div>
+<section ng-controller="TabController as TabCtrl" ng-init="TabCtrl.setTab(1)">
+	<ul class="nav nav-tabs" role="tablist">
+		<li ng-class="{'active':TabCtrl.isSet(1)}"><a href="#" ng-click="TabCtrl.setTab(1);">Contact Info</a></li>
+		<li ng-class="{'active':TabCtrl.isSet(2)}"><a href="#" ng-click="TabCtrl.setTab(2)">Car Info</a></li>
+		<li ng-class="{'active':TabCtrl.isSet(3)}"><a href="#" ng-click="TabCtrl.setTab(3)">Availability</a></li>
+	</ul>
+	<div ng-show="TabCtrl.isSet(1)" ng-include="'/views/volunteer/_form_contact.html'"></div>
+	<div ng-show="TabCtrl.isSet(2)" ng-include="'/views/volunteer/_form_car.html'"></div>
+	<div ng-show="TabCtrl.isSet(3)" ng-include="'/views/volunteer/_form_availability.html'"></div>
+</section>

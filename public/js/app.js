@@ -1,1 +1,1 @@
-angular.module('MOW', ['ngRoute', 'appRoutes','VolunteerControllers']);
+angular.module('MOW', ['ngRoute', 'appRoutes','NavigationControllers','VolunteerControllers']);

@@ -81,8 +81,6 @@ VolunteerControllers.controller('VolunteerDetailsCtrl', [
 	'$routeParams',
 	function($scope, $http, $routeParams) {
 		console.log("VolunteerDetailsCtrl");
-
-		$scope.tab = 1;
 		
 		// Get volunteer data
 		$http.get('/api/volunteers/' + $routeParams.username)
