@@ -5,5 +5,5 @@ module.exports = mongoose.model('Driver', {
 	car_registration : String,
 	insurer : String,
 	policy_nr : String,
-	preferred_route : Array
+	routes : Array
 });

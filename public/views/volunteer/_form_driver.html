@@ -26,10 +26,10 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-sm-2">Prefered route</label>
+			<label class="control-label col-sm-2">Prefered routes</label>
 			<div class="col-sm-4" >
-				<input ng-repeat="r in [1,2,3,4,5]"  type="button" ng-click="data.preferred_route.indexOf(r)<0 && data.preferred_route.push(r) && Driver.$setDirty()" value="{{r}}" class="btn btn-default" ng-class="{'btn-info':data.preferred_route && data.preferred_route.indexOf(r)!=-1}" style="margin-right:5px;">
-				<input type="button" value="no preference" ng-click="data.preferred_route=[1,2,3,4,5] && Driver.$setDirty()" class="btn btn-default pull-right" ng-class="{'btn-info':!data.preferred_route.length}">
+				<input ng-repeat="r in [1,2,3,4,5]"  type="button" ng-click="data.routes.indexOf(r)<0 && data.routes.push(r) && Driver.$setDirty()" value="{{r}}" class="btn btn-default" ng-class="{'btn-info':data.routes && data.routes.indexOf(r)!=-1}" style="margin-right:5px;">
+				<input type="button" value="no preference" ng-click="data.routes=[1,2,3,4,5] && Driver.$setDirty()" class="btn btn-default pull-right" ng-class="{'btn-info':!data.routes.length}">
 			</div>
 		</div>
 		<div class="form-group">

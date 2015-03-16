@@ -13,8 +13,8 @@ module.exports = mongoose.model('Volunteer', {
 		city : String
 
 	},
-	role: Array, // Driver,Kitchen,Office
 	availability : {
+		roles: Array, // Driver,Kitchen,Office
 		frequency : {type: Array, default: [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},
 		exceptions : Array
 	}

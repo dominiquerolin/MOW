@@ -6,9 +6,8 @@ angular.module('Volunteer', [])
 .controller('VolunteerCtrl', [
 	'$scope',
 	'$http',
-	'$route',
 	'$routeParams',
-	function($scope,$http,$route,$routeParams){
+	function($scope,$http,$routeParams){
 		console.log("VolunteerCtrl");
 		$http.get('/api/volunteers/' + $routeParams.username)
 		.success(function(result) {
