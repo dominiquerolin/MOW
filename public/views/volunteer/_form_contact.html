@@ -1,62 +1,56 @@
-<h2>Contact information for {{v.username}}</h2>
-<form role="form" class="form-horizontal" novalidate 
-		name="contactForm"	
-		ng-submit="contactForm.$dirty && updateInfo(contactForm)">
-		
+
+<form ng-controller="FormController as FormCtrl" 
+	role="form" class="form-horizontal" novalidate 
+	name="VolunteerContact"
+	ng-submit="VolunteerContact.$dirty && submitForm(VolunteerContact)">
+	
 		<alert></alert>
 		<div class="form-group">
-			<label class="control-label col-sm-2">Username</label>
-			<div class="col-sm-4"><input name="username" type="text" ng-model="v.username" class="form-control" disabled></div>
-			<div class="col-sm-6"></div>
-		</div>
-		<div class="form-group">
-			<label class="control-label col-sm-2">Email</label>
-			<div class="col-sm-4"><input name="email" type="email" ng-model="v.email" class="form-control" required ng-change="email_changed = true"></div>
-			<div class="col-sm-6" ng-show="contactForm.$dirty && contactForm.$submitted">
-				<span class="text-danger" ng-show="!v.email">Email is required.</span>
-				<span class="text-danger" ng-show="contactForm.email.$invalid">Email is invalid.</span>
+			<label class="control-label col-sm-2">First name</label>
+			<div class="col-sm-4"><input name="first_name" type="text" ng-model="data.first_name" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="VolunteerContact.$dirty && VolunteerContact.$submitted">
+				<span class="text-danger" ng-show="!data.first_name">First name is required.</span>
 			</div>
 		</div>
-		<div class="form-group" ng-show="email_changed">
-			<label class="control-label col-sm-2"></label>
-			<div class="col-sm-4"><input name="email_confirm" type="email" ng-model="v.email_confirm" class="form-control" compare-to="email_changed ? v.email : null" placeholder="Confirm Email"></div>
-			<div class="col-sm-6" ng-show="contactForm.$dirty && contactForm.$submitted">
-				<span class="text-danger" ng-show="!contactForm.email_confirm.$viewValue">Confirm Email is required.</span>
-				<span class="text-danger" ng-show="contactForm.email_confirm.$error.compareTo">Confirm Email doesn't match Email.</span>
-			</div>	
+		<div class="form-group">
+			<label class="control-label col-sm-2">Last name</label>
+			<div class="col-sm-4"><input name="last_name" type="text" ng-model="data.last_name" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="VolunteerContact.$dirty && VolunteerContact.$submitted">
+				<span class="text-danger" ng-show="!data.last_name">Last name is required.</span>
+			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">Address</label>
-			<div class="col-sm-4"><input name="address_line1" type="text" ng-model="v.address.line1" class="form-control" required></div>		
-			<div class="col-sm-6" ng-show="contactForm.$dirty && contactForm.$submitted">
-				<span class="text-danger" ng-show="!v.address.line1">Address is required.</span>
+			<div class="col-sm-4"><input name="address_line1" type="text" ng-model="data.address.line1" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="VolunteerContact.$dirty && VolunteerContact.$submitted">
+				<span class="text-danger" ng-show="!data.address.line1">Address is required.</span>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2"></label>
-			<div class="col-sm-4"><input name="address_line2" type="text" ng-model="v.address.line2" class="form-control"></div>
+			<div class="col-sm-4"><input name="address_line2" type="text" ng-model="data.address.line2" class="form-control"></div>
 			<div class="col-sm-6"></div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">City/Zip</label>
-			<div class="col-sm-3"><input  name="city" type="text" ng-model="v.address.city" class="form-control" required></div>
-			<div class="col-sm-1"><input  name="zip" type="text" ng-model="v.address.zip" class="form-control" ng-pattern="/^\d{4}$/" required></div>
-			<div class="col-sm-6" ng-show="contactForm.$dirty && contactForm.$submitted">
-				<span class="text-danger" ng-show="!v.address.zip">Zip is required.</span>
-				<span class="text-danger" ng-show="contactForm.address.zip.$invalid">Zip is invalid.</span>
-				<span class="text-danger" ng-show="!v.address.city">City is required.</span>
+			<div class="col-sm-3"><input  name="city" type="text" ng-model="data.address.city" class="form-control" required></div>
+			<div class="col-sm-1"><input  name="zip" type="text" ng-model="data.address.zip" class="form-control" ng-pattern="/^\d{4}$/" required></div>
+			<div class="col-sm-6" ng-show="VolunteerContact.$dirty && VolunteerContact.$submitted">
+				<span class="text-danger" ng-show="!data.address.zip">Zip is required.</span>
+				<span class="text-danger" ng-show="VolunteerContact.address.zip.$invalid">Zip is invalid.</span>
+				<span class="text-danger" ng-show="!data.address.city">City is required.</span>
 			</div>
 		</div>
-		<div class="form-group" ng-repeat="phone in v.phone track by $index">
+		<div class="form-group" ng-repeat="phone in data.phone track by $index">
 			<label class="control-label col-sm-2"><span ng-show="$index==0">Phone</span></label>
-			<div class="col-sm-3"><input name="phone_{{$index}}" type="text" ng-model="v.phone[$index]" class="form-control" ng-pattern="/^\d{10}$/" value="{{phone}}" ng-required="v.phone.length==1"></div>
+			<div class="col-sm-3"><input name="phone_{{$index}}" type="text" ng-model="data.phone[$index]" class="form-control" ng-pattern="/^\d{10}$/" value="{{phone}}" ng-required="data.phone.length==1"></div>
 			<div class="col-sm-1">
-				<span ng-click="v.phone.splice($index,1) && contactForm.$setDirty()" ng-show="v.phone.length>1 && $index!=v.phone.length-1" class="glyphicon glyphicon-minus btn btn-danger btn-xs" ></span>
-				<span ng-click="contactForm['phone_'+$index].$valid && v.phone.push(null) && contactForm.$setDirty()" ng-show="$index==v.phone.length-1" class="glyphicon glyphicon-plus btn btn-success btn-xs" ></span>
+				<span ng-click="data.phone.splice($index,1) && VolunteerContact.$setDirty()" ng-show="data.phone.length>1 && $index!=data.phone.length-1" class="glyphicon glyphicon-minus btn btn-danger btn-xs" ></span>
+				<span ng-click="VolunteerContact['phone_'+$index].$valid && data.phone.push(null) && VolunteerContact.$setDirty()" ng-show="$index==data.phone.length-1" class="glyphicon glyphicon-plus btn btn-success btn-xs" ></span>
 			</div>
-			<div class="col-sm-6" ng-show="contactForm.$dirty && contactForm.$submitted">
-				<span class="text-danger" ng-show="contactForm['phone_'+$index].$error.required">Phone is required.</span>
-				<span class="text-danger" ng-show="!contactForm['phone_'+$index].$error.required && contactForm['phone_'+$index].$invalid">Phone is invalid.</span>
+			<div class="col-sm-6" ng-show="VolunteerContact.$dirty && VolunteerContact.$submitted">
+				<span class="text-danger" ng-show="VolunteerContact['phone_'+$index].$error.required">Phone is required.</span>
+				<span class="text-danger" ng-show="!VolunteerContact['phone_'+$index].$error.required && VolunteerContact['phone_'+$index].$invalid">Phone is invalid.</span>
 			</div>
 		</div>
 		<div class="form-group">

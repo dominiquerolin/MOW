@@ -1,7 +1,7 @@
-<div class="form-group"  ng-hide="!alert.message">
+<div class="form-group"  ng-show="alert.message != null">
 	<div class="col-sm-4 col-sm-offset-2 ">
-		<div class="alert" ng-class="{'alert-danger':alert.error === true,'alert-success':alert.error === false}">
-	  		<a class="close" data-dismiss="alert" ng-click="alert.message=null">x</a>
+		<div class="alert" ng-class="{'alert-danger':!alert.status,'alert-success':alert.status}">
+	  		<a class="close" data-dismiss="alert" ng-click="alert.message = null">x</a>
 	  		{{alert.message}}
 	 	</div>
  	</div>

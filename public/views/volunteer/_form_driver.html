@@ -1,0 +1,40 @@
+
+	<form ng-controller="FormController as FormCtrl"
+		role="form" class="form-horizontal" novalidate 
+		name="Driver"
+		ng-submit="Driver.$dirty && submitForm(Driver)">
+		<alert></alert>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Registration</label>
+			<div class="col-sm-4"><input name="car_registration" type="text" ng-model="data.car_registration" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="Driver.$dirty && Driver.$submitted">
+				<span class="text-danger" ng-show=" !data.car_registration">Registration is required.</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Insurer</label>
+			<div class="col-sm-4"><input name="insurer" type="text" ng-model="data.insurer" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="Driver.$dirty && Driver.$submitted">
+				<span class="text-danger" ng-show=" !data.insurer">Insurer is required.</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Policy Nr.</label>
+			<div class="col-sm-4"><input name="car_policy_nr" type="text" ng-model="data.policy_nr" class="form-control" required></div>		
+			<div class="col-sm-6" ng-show="Driver.$dirty && Driver.$submitted">
+				<span class="text-danger" ng-show="!data.policy_nr">Policy Nr. is required.</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Prefered route</label>
+			<div class="col-sm-4" >
+				<input ng-repeat="r in [1,2,3,4,5]"  type="button" ng-click="data.preferred_route.indexOf(r)<0 && data.preferred_route.push(r) && Driver.$setDirty()" value="{{r}}" class="btn btn-default" ng-class="{'btn-info':data.preferred_route && data.preferred_route.indexOf(r)!=-1}" style="margin-right:5px;">
+				<input type="button" value="no preference" ng-click="data.preferred_route=[1,2,3,4,5] && Driver.$setDirty()" class="btn btn-default pull-right" ng-class="{'btn-info':!data.preferred_route.length}">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 col-sm-offset-2">
+				<input type="submit" value="Update" class="btn btn-warning btn-block" >
+			</div>
+		</div>
+	</form>

@@ -1,27 +1,20 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+	Schema = mongoose.Schema;
 
-// define our volunteer model & mongodb schema
-// module.exports allows us to pass this to other files when it is called
 module.exports = mongoose.model('Volunteer', {
-	username : String,
-	email : String,
-	active : Boolean,
+	username: String,
+	first_name: String,
+	last_name: String,
 	phone : Array,
 	address : {
 		line1 : String,
 		line2 : String,
 		zip : String,
 		city : String
+
 	},
-	car : {
-		registration : String,
-		insurance : {
-			insurer : String,
-			policy_nr : String
-		}
-	},
+	role: Array, // Driver,Kitchen,Office
 	availability : {
-		route: Array,
 		frequency : {type: Array, default: [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},
 		exceptions : Array
 	}

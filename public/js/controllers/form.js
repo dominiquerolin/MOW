@@ -1,7 +1,70 @@
-var FormControllers = angular.module('FormControllers', []);
-FormControllers.controller('FormCtrl', ['$scope', function($scope) {
+angular.module('Forms', [])
+.controller('FormController', [
+     '$scope',
+     '$http',
+     '$location',
+     function($scope, $http, $location){
+    	 $scope.submitForm = function( frm ) {
+    		 console.log(frm);
+    		 
+    		 if(!frm.$valid) {
+				$scope.alert = {
+					error : true,
+					message : 'Please fix the validation errors below.'
+				};
+				return;
+			}
 
-}])
+    		 
+			var post_url = '';
+			switch(frm.$name) {
+				case 'Register':
+					post_url = '/api/users';
+					break;
+				case 'VolunteerContact':
+					$scope.data.phone = $scope.data.phone.filter(function(data){return data!=null;})
+					post_url = '/api/volunteers/' + ($scope.data._id?$scope.data._id:'');
+					break
+				case 'VolunteerAvailability':
+					post_url = '/api/volunteers/' + ($scope.data._id?$scope.data._id:'');
+					break;
+				case 'Driver':
+					post_url = '/api/drivers/' + ($scope.data._id?$scope.data._id:'');
+					break;
+				default:
+					$scope.alert = {
+						status : false,
+						message : 'No post url defined for "'+frm.$name+'".'
+					};
+					return;
+			}
+			console.log("Form validation passed: submit form to "+post_url);
+				
+			
+			$http.post(post_url, $scope.data)
+			.success(function(result) {
+				console.log('Success:', result);
+				$scope.alert = {
+					status : true,
+					message : ($scope.data._id?'Update':'Creation')+' successful!'
+				};
+
+				if(frm.$name=='Register') {
+					$location.path('/volunteers/'+$scope.data.username );
+				} else {
+					frm.$setPristine(); 
+				}
+
+			})
+			.error(function(result) {
+				console.log('Error:', result);
+				$scope.alert = { status : false, message : result };
+			});
+			
+			
+    	 };
+     }
+ ])
 .directive("compareTo", function() {
 	return {
 		require : "ngModel",

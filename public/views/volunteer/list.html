@@ -1,32 +1,3 @@
 
-<h2>Volunteers list</h2>
-<table class="table" >
-	<tr>
-		<th></th>
-		<th>Username</th>
-		<th>Email</th>
-		<th>Address</th>
-		<th>Phone</th>
-		<th>Car/Insurance</th>
-	</tr>
-	<tr ng-repeat="v in volunteers track by $index">
-		<td>
-			<span class="glyphicon glyphicon-remove text-danger" ng-click="askConfirm('Delete?') && deleteVolunteer($index)"></span>
-			<span class="glyphicon glyphicon-edit" ng-click="editVolunteer($index)"></span>
-			<span class="glyphicon glyphicon-user" ng-class="{'text-success':{{v.active}}, 'text-muted':!{{v.active}}}"></span>
-		</td>
-		<td><a href='#' ng-click="editVolunteer($index)">{{v.username}}</a></td>
-		<td>{{v.email}}</td>
-		<td>
-		<p>{{v.address.line1}}</p>
-		<p ng-show="{{v.address.line2}}">{{v.address.line2}}</p>
-		<p>{{v.address.city}} {{v.address.zip}}</p>
-		</td>
-		<td><p ng-repeat="p in v.phone">{{p}}</p></td>
-		<td>
-			<p>{{v.car.registration}}</p>
-			<p>{{v.car.insurance.insurer}}</p>
-			<p>{{v.car.insurance.policy_nr}}</p>
-		</td>
-	</tr>
-</table>
+<h2>Volunteer list</h2>
+{{volunteers}}

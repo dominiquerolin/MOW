@@ -49,5 +49,39 @@ module.exports = {
 		while(week.length<5) week.push(null); // pad last week if needed
 		cal.push(week);
 		return cal;
+	},
+	getCalendars: function(year, month, callback) {
+
+		if(typeof(callback)!='function')
+			throw 'Missing callback function';
+		
+		if (!year)
+			return callback('No year provided.');
+
+		var range = [];
+		var result = {};
+		// return full year
+		if (!month) {
+			range = [ 0,11 ];
+		} else if (Number(month)) {
+			range = [ parseInt(month)-1, parseInt(month)-1 ];
+		} else {
+			// return month range
+			var tmp = month.match(/^(\d+)\-(\d+)$/);
+
+			if (tmp && tmp[1]<=12 && tmp[2]<=12 && tmp[1]<=tmp[2])
+				range = [parseInt(tmp[1])-1, parseInt(tmp[2])-1];
+		}
+
+		if (range.length == 2) {
+			for (month = range[0]; month <= range[1]; month++) {
+				var date = new Date(year, month, 1);
+				result[this.format(date)] = this.getMonthArray(date);
+			}
+			return callback(null, result);
+		} 
+		else {
+			return callback('Invalid range provided:'+range);
+		}
 	}
 };

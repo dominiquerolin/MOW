@@ -1,0 +1,64 @@
+
+
+<form role="form" class="form-horizontal" novalidate 
+	name="userForm"	
+	ng-submit="userForm.$dirty && update(userForm)">
+	
+	<h2>User Settings for {{user.username}}</h2>
+
+	<alert></alert>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Created on</label>
+		<div class="col-sm-4">{{user.date_created | date}}</div>
+		<div class="col-sm-6"></div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Username</label>
+		<div class="col-sm-4"><input name="username" type="text" ng-model="user.username" class="form-control" disabled></div>
+		<div class="col-sm-6"></div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Email</label>
+		<div class="col-sm-4"><input name="email" type="email" ng-model="user.email" class="form-control" required ng-change="email_changed = true"></div>
+		<div class="col-sm-6" ng-show="userForm.$dirty && userForm.$submitted">
+			<span class="text-danger" ng-show="!user.email">Email is required.</span>
+			<span class="text-danger" ng-show="userForm.email.$invalid">Email is invalid.</span>
+		</div>
+	</div>
+	<div class="form-group" ng-show="email_changed">
+		<label class="control-label col-sm-2"></label>
+		<div class="col-sm-4"><input name="email_confirm" type="email" ng-model="user.email_confirm" class="form-control" compare-to="email_changed ? user.email : null" placeholder="Confirm Email"></div>
+		<div class="col-sm-6" ng-show="userForm.$dirty && userForm.$submitted">
+			<span class="text-danger" ng-show="!userForm.email_confirm.$viewValue">Confirm Email is required.</span>
+			<span class="text-danger" ng-show="userForm.email_confirm.$error.compareTo">Confirm Email doesn't match Email.</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Role</label>
+		<div class="col-sm-4">
+			<select name="role" ng-model="user.role" class="form-control">
+				<option ng-repeat="r in roles track by $index" ng-value="$index" ng-selected="$index==user.role">{{r}}
+			</select>
+		</div>
+		<div class="col-sm-6" ng-show="userForm.$dirty && userForm.$submitted">
+
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Active</label>
+		<div class="col-sm-1">
+			<input type="radio" name="active" id="active_0"  ng-model="user.active" value="1" ng-checked="user.active"><label for="active_0">Yes</label>
+		</div>
+		<div class="col-sm-1">
+			<input type="radio" name="active" id="active_1" ng-model="user.active" value="0" ng-checked="!user.active"><label for="active_1">No</label>
+		</div>
+		<div class="col-sm-8" ng-show="userForm.$dirty && userForm.$submitted">
+
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-6">
+			<input type="submit" value="Update" class="btn btn-primary pull-right" >
+		</div>
+	</div>
+</form>

@@ -1,11 +1,20 @@
-
-	<h2>Availability for {{v.username}}</h2>
-	<form role="form" class="form-horizontal" novalidate 
-		name="availabilityForm"	
-		ng-submit="updateInfo(availabilityForm)">
+	<form 
+		ng-controller="FormController as FormCtrl"
+		role="form" class="form-horizontal" novalidate 
+		name="VolunteerAvailability"	
+		ng-submit="submitForm(VolunteerAvailability)">
 		
 		<alert></alert>
 		
+		<div class="form-group">
+			<label class="control-label col-sm-2">Prefered role</label>
+			<div class="col-sm-1" ng-repeat="r in ['Driver', 'Kitchen', 'Office']" >
+				<input type="button" ng-click="data.role.indexOf(r)<0 && data.role.push(r) || data.role.splice(data.role.indexOf(r),1)" value="{{r}}" class="btn btn-default btn-block" ng-class="{'btn-info':data.role && data.role.indexOf(r)!=-1}">
+			</div>
+			<div class="col-sm-2">
+				<input type="button" value="no preference" ng-click="data.role=['Driver', 'Kitchen', 'Office']" class="btn btn-default btn-block" ng-class="{'btn-info':data.role && !data.role.length}">
+			</div>
+		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">Frequency</label>
 			<div class="col-sm-7">
@@ -34,7 +43,7 @@
 				<label>Exceptions</label>
 				<p>Click on the calendars below to add/remove an exception</p>
 					<ul class="list-unstyled" style="height:200px;overflow-y:auto;">
-						<li ng-repeat="date in v.availability.exceptions track by $index">{{date}}</li>
+						<li ng-repeat="date in data.availability.exceptions track by $index">{{date}}</li>
 					</ul>
 			</div>
 			
@@ -48,21 +57,12 @@
 					<tr ng-repeat="(w,week) in month track by $index">
 						<td ng-repeat="(d,day) in week track by $index">
 							<span class="btn btn-xs"
-							ng-init="offset = month[0][d]?0:1;e=exception(m,day);" 
-							ng-class="{ 'bg-success' : day && v.availability.frequency[w-offset][d], 'bg-danger': e.hasException()}"
+							ng-init="offset = month[0][d]?0:1;e=exception(m, day);" 
+							ng-class="{ 'bg-success' : day && data.availability.frequency[w-offset][d], 'bg-danger': e.hasException()}"
 							ng-click="e.toggle()">{{day}}</span>
 						</td>
 					</tr>
 				</table>
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="control-label col-sm-2">Prefered route</label>
-			<div class="col-sm-1" ng-repeat="r in [1,2,3,4,5]" >
-				<input type="button" ng-click="v.availability.route.indexOf(r)<0 && v.availability.route.push(r)" value="{{r}}" class="btn btn-default btn-block" ng-class="{'btn-info':v.availability.route.indexOf(r)!=-1}">
-			</div>
-			<div class="col-sm-2">
-				<input type="button" value="no preference" ng-click="v.availability.route=[]" class="btn btn-default btn-block" ng-class="{'btn-info':!v.availability.route.length}">
 			</div>
 		</div>
 		<div class="form-group">
