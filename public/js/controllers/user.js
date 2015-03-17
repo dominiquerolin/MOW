@@ -13,35 +13,14 @@ angular.module('User', [])
 		console.log("UserCtrl");
 
 		$http.get('/api/users/'+$routeParams.username)
-		.success(function(result) {
-			$scope.user = result.data;
+		.success(function(user) {
+			$scope.data = user.data;
 			$scope.roles = ['User','Admin','SuperAdmin'];
+			console.log($scope.data);
 		})
-		.error(function(result){
-			console.log('Error: ' + result.message);
+		.error(function(err){
+			$scope.alert = {status : false,	message : err.message };
 		});
-		
-		$scope.update = function(frm){
-			if(!frm.$valid) {
-				$scope.alert = {
-					status : false,
-					message : 'Please fix the validation errors below.'
-				};				
-			}
-			else {
-				$http.put('/api/users', $scope.user)
-				.success(function(result) {
-					console.log(result);
-					if(result.status)
-						$scope.alert = { status : true, message : 'Successfully updated'};
-					else
-						$scope.alert = { status : false, message :result.message };
-				})
-				.error(function(msg) {
-					$scope.alert = { status : false, message : msg };
-				});
-			}
-		};
 	}
 ])
 .controller('UserListCtrl', [ 
@@ -52,12 +31,13 @@ angular.module('User', [])
 		console.log("UserListCtrl");
 
 		$http.get('/api/users')
-		.success(function(result) {
-			console.log(result);
-			$scope.users = result.data;
+		.success(function(users) {
+			console.log(users);
+			$scope.users = users.data;
 			$scope.roles = ['User', 'Admin', 'SuperAdmin'];
-		}).error(function(data) {
-			console.log('Error: ' + data);
+		})
+		.error(function(err){
+			$scope.alert = {status : false,	message : err.message };
 		});
 		
 
@@ -78,18 +58,9 @@ angular.module('User', [])
 				else
 					console.log(result.message);
 			})
-			.error(function(result) {
-				console.log('Error connecting to API', data);
+			.error(function(err){
+				$scope.alert = {status : false,	message : err.message };
 			});
 		};
-	}]
-)
-.controller('UserRegisterFormCtrl', [
-	'$scope',
-	function($scope) {
-		console.log("UserRegisterFormCtrl");
-		$scope.alert = {status : true, message : null };
-		$scope.data = {};
-
 	}]
 );

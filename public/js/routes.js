@@ -16,8 +16,7 @@ angular.module('appRoutes', [])
 	            controller: 'UserCtrl'
 	        })
 		    .when('/register', {
-		        templateUrl: 'views/user/register.html',
-	            controller: 'UserRegisterFormCtrl'
+		        templateUrl: 'views/user/register.html'
 		    })
 		    // Volunteer area handles their volunteer profile/data
 	        .when('/volunteers', {

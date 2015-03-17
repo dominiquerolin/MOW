@@ -44,11 +44,16 @@ module.exports = {
 			if(err) return callback(err);
 			
 			// create volunteer with same username
-			Volunteer.create(o, function(err, result){
+			Volunteer.create(o, function(err, volunteerData){
 				if (err) {
 					return callback(err);
 				} else {
-					return callback(null, result);
+					User.update({username:o.username}, {volunteer_id:volunteerData._id}, function(err, userData){
+						if (err)
+							return callback(err);
+						else
+							return callback(null, volunteerData);
+					});					
 				}
 			});
 			
@@ -57,11 +62,17 @@ module.exports = {
 	update: function(id, o, callback){
 		if(typeof(callback)!='function')
 			throw 'Callback function missing';
-		Volunteer.findByIdAndUpdate(id, o, function(err, result) {
+		
+		Volunteer.findByIdAndUpdate(id, o, function(err, volunteerData) {
 			if (err) {
 				return callback(err);
 			} else {
-				return callback(null, result);
+				User.update({username:o.username}, {volunteer_id:volunteerData._id}, function(err, userData){
+					if (err)
+						return callback(err);
+					else
+						return callback(null, volunteerData);
+				});			
 			}
 		});
 	},

@@ -11,7 +11,7 @@
 	</tr>
 	<tr ng-repeat="u in users track by $index">
 		<td>
-			<span class="glyphicon glyphicon-user" ng-class="{'text-success':{{u.active}}, 'text-muted':!{{u.active}}}"></span>
+			<span class="btn glyphicon glyphicon-user" ng-class="{'btn-success':u.active, 'btn-default':!u.active}"></span>
 		</td>
 		<td>
 			<span ng-bind="roles[u.role]"></span>
@@ -19,9 +19,11 @@
 		<td>{{u.username}}</td>
 		<td>{{u.email}}</td>
 		<td>
-			<input type="button" class="btn btn-info" value="Edit User"  ng-click="editUser($index)"></span>
-			<input type="button" class="btn btn-info" ng-value="(u.volunteer_id?'View':'Create')+' Volunteer Profile'"  ng-click="viewDetails($index)"></span>
-			<input type="button" class="btn btn-danger" value="Delete" ng-click="askConfirm('Delete?') && deleteUser($index)"></span>
+			<span class="btn btn-info glyphicon glyphicon-cog" title="Edit User"  ng-click="editUser($index)"></span>
+			<span ng-show="u.volunteer_id" class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile"  ng-click="viewDetails($index)"></span>
+			<span ng-hide="u.volunteer_id" class="btn glyphicon btn-warning glyphicon-plus" title="Create Volunteer Profile"  ng-click="viewDetails($index)"></span>
+			<span class="btn btn-danger glyphicon glyphicon-remove" title="Delete User" ng-click="askConfirm('This will delete the user and associated volunteer profile. Proceed?') && deleteUser($index)"></span>
+		
 		</td>
 	</tr>
 </table>

@@ -5,7 +5,6 @@ angular.module('Forms', [])
      '$location',
      function($scope, $http, $location){
     	 $scope.submitForm = function( frm ) {
-    		 console.log(frm);
     		 
     		 if(!frm.$valid) {
 				$scope.alert = {
@@ -18,18 +17,19 @@ angular.module('Forms', [])
     		 
 			var post_url = '';
 			switch(frm.$name) {
+				case 'User':
 				case 'Register':
-					post_url = '/api/users';
+					post_url = '/api/users/';
 					break;
 				case 'VolunteerContact':
 					$scope.data.phone = $scope.data.phone.filter(function(data){return data!=null;})
-					post_url = '/api/volunteers/' + ($scope.data._id?$scope.data._id:'');
+					post_url = '/api/volunteers/';
 					break
 				case 'VolunteerAvailability':
-					post_url = '/api/volunteers/' + ($scope.data._id?$scope.data._id:'');
+					post_url = '/api/volunteers/';
 					break;
 				case 'Driver':
-					post_url = '/api/drivers/' + ($scope.data._id?$scope.data._id:'');
+					post_url = '/api/drivers/';
 					break;
 				default:
 					$scope.alert = {
@@ -38,6 +38,7 @@ angular.module('Forms', [])
 					};
 					return;
 			}
+			post_url+=($scope.data._id?$scope.data._id:'');
 			console.log("Form validation passed: submit form to "+post_url);
 				
 			
