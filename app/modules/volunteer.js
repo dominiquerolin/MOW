@@ -1,4 +1,4 @@
-var User = require('./user'); // the node module
+
 var Volunteer = require('../models/volunteer'); // the mongoose model
 
 module.exports = {
@@ -37,32 +37,33 @@ module.exports = {
 			return callback( 'Invalid argument');
 		if(!o.username)
 			return callback( 'Missing argument: username');
-		
-		//check if user exist
-		console.log("check if user exist", o.username);
-		User.get({username:o.username}, function(err,result){
+
+		console.log('check if user exists');
+		var User = require('../modules/user'); // the node module
+		User.get({username:o.username}, function(err, userData){
 			if(err) return callback(err);
-			
-			// create volunteer with same username
-			Volunteer.create(o, function(err, volunteerData){
-				if (err) {
-					return callback(err);
-				} else {
-					User.update({username:o.username}, {volunteer_id:volunteerData._id}, function(err, userData){
-						if (err)
-							return callback(err);
-						else
-							return callback(null, volunteerData);
-					});					
-				}
-			});
-			
+			else {
+				console.log('create volunteer with same username');
+				Volunteer.create(o, function(err, volunteerData){
+					if (err) {
+						return callback(err);
+					} else {
+						User.update({username:o.username}, {volunteer_id:volunteerData._id}, function(err, userData){
+							if (err)
+								return callback(err);
+							else
+								return callback(null, volunteerData);
+						});					
+					}
+				});
+			}
 		});
 	},
 	update: function(id, o, callback){
 		if(typeof(callback)!='function')
 			throw 'Callback function missing';
-		
+
+		var User = require('../modules/user'); // the node module
 		Volunteer.findByIdAndUpdate(id, o, function(err, volunteerData) {
 			if (err) {
 				return callback(err);

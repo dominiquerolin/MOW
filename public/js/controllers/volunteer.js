@@ -32,6 +32,22 @@ angular.module('Volunteer', [])
 			console.log( 'Error: ' + data );
 		});
 }])
+.controller('VolunteerListCtrl', [ 
+	'$scope', 
+	'$http',
+	'$window', 
+	function($scope, $http, $window) {
+		console.log("VolunteerListCtrl");
+	
+	$http.get('/api/volunteers')
+	.success(function(volunteers) {
+		console.log(volunteers);
+		$scope.volunteers = volunteers.data;
+	})
+	.error(function(err){
+		$scope.alert = {status : false,	message : err };
+	});
+}])
 .controller('VolunteerAvailabilityCtrl', [
 	'$scope',
 	'$http',
@@ -68,7 +84,7 @@ angular.module('Volunteer', [])
 		};
 		// Frequency table handler
 		$scope.frequency = function( d ){
-			var f = $scope.data.availability.frequency;
+			var f = $scope.data.availability.frequency; //TODO: ensure $scope.data is loaded before defining this function
 			this.d = d;
 			this.toggle = function (w) {
 				f[w][this.d] = !f[w][this.d];

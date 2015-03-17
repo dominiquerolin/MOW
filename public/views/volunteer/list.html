@@ -1,3 +1,23 @@
 
-<h2>Volunteer list</h2>
-{{volunteers}}
+<h2>Volunteers list</h2>
+<alert></alert>
+<table class="table" >
+	<tr>
+		<th>Name</th>
+		<th>Preferred Roles</th>
+		<th>Availability</th>
+		<th></th>
+	</tr>
+	<tr ng-repeat="v in volunteers track by $index">
+		<td>{{v.first_name}} {{v.last_name}}</td>
+		<td>
+			<ul><li ng-repeat="r in v.availability.roles">{{r}}</li></ul>
+		</td>
+		<td>
+		{{v.availability.frequency}}
+		</td>
+		<td>
+			<span class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile"  ng-click="viewDetails($index)"></span>
+		</td>
+	</tr>
+</table>

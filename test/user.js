@@ -28,18 +28,6 @@ describe('User', function(){
 	it('should have a remove method', function(){
 		expect(typeof(User.remove)).to.equal('function');
 	});
-	it('should have a isActive method', function(){
-		expect(typeof(User.isActive)).to.equal('function');
-	});
-	it('should have a isAdmin method', function(){
-		expect(typeof(User.isAdmin)).to.equal('function');
-	});
-	it('should have a isSuperAdmin method', function(){
-		expect(typeof(User.isSuperAdmin)).to.equal('function');
-	});
-	it('should have a checkPassword method', function(){
-		expect(typeof(User.checkPassword)).to.equal('function');
-	});
 	describe('#User.create()', function(){
 		it('should return false when argument is not valid', function(){
 			User.create('Invalid argument', function(u){

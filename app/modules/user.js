@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var Volunteer = require('../modules/volunteer');
 
 module.exports = {
 	getAll : function(callback) {
@@ -77,32 +78,51 @@ module.exports = {
 			}
 		});
 	},
-	update: function(id, o, callback){
+	update: function(search, data, callback){
 		if(typeof(callback)!='function')
 			throw 'User.update() requires a callback function';
 
-		User.findByIdAndUpdate(id, o, function(err, result) {
+		if(typeof(search)!='object')
+			search = {_id:search};
+		
+		if(typeof(data)!='object')
+			return callback('Invalid argument #2 for User.update() : data must be an object')
+
+		console.log('User.update');
+		User.update(search, data, function(err, result){
 			if (err) {
 				return callback(err);
 			} else {
 				return callback(null, result);
-			}
+			}				
 		});
 	},
 	remove: function(id, callback){
 		if(typeof(callback)!='function')
 			throw 'User.remove() requires a callback function';
-		
-		User.findByIdAndRemove(id, function (err, result) {
-			if (err) {
-				return callback(err);
-			} else {
-				return callback(null, result);
+
+		User.findById(id, function(err, user){
+			if(err)
+				return callback (err);
+			
+			var msg = '';
+			if(!!user.volunteer_id) {
+				console.log('removing volunteer data');
+				Volunteer.remove(user.volunteer_id, function(err, volunteerData){
+					if(err)
+						return callback (err);
+					else
+						msg = 'Deleted volunteer data. ';
+				});
+				
 			}
+			user.remove(function(err, userData){
+				if(err)
+					return callback (msg+err);
+				else
+					return callback(null, msg+'Deleted user data.');
+			});
 		});
-	},
-	isActive: function(){},
-	isAdmin: function(){},
-	isSuperAdmin: function(){},
-	checkPassword: function(){}
+		
+	}
 };

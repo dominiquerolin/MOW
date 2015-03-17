@@ -19,7 +19,7 @@ angular.module('User', [])
 			console.log($scope.data);
 		})
 		.error(function(err){
-			$scope.alert = {status : false,	message : err.message };
+			$scope.alert = {status : false,	message : err };
 		});
 	}
 ])
@@ -37,7 +37,7 @@ angular.module('User', [])
 			$scope.roles = ['User', 'Admin', 'SuperAdmin'];
 		})
 		.error(function(err){
-			$scope.alert = {status : false,	message : err.message };
+			$scope.alert = {status : false,	message : err };
 		});
 		
 
@@ -59,7 +59,7 @@ angular.module('User', [])
 					console.log(result.message);
 			})
 			.error(function(err){
-				$scope.alert = {status : false,	message : err.message };
+				$scope.alert = {status : false,	message : err };
 			});
 		};
 	}]
