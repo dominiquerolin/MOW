@@ -24,6 +24,7 @@ angular.module('Volunteer', [])
 				$scope.data.phone = [null];
 			if(!$scope.data.availability)
 				$scope.data.availability = {
+					roles:[],
 					frequency:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
 					exceptions:[]
 				};

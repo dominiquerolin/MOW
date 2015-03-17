@@ -5,14 +5,13 @@
 		ng-submit="submitForm(VolunteerAvailability)">
 		
 		<alert></alert>
-		
 		<div class="form-group">
 			<label class="control-label col-sm-2">Prefered role</label>
 			<div class="col-sm-1" ng-repeat="r in ['Driver', 'Kitchen', 'Office']" >
-				<input type="button" ng-click="data.role.indexOf(r)<0 && data.role.push(r) || data.role.splice(data.role.indexOf(r),1)" value="{{r}}" class="btn btn-default btn-block" ng-class="{'btn-info':data.role && data.role.indexOf(r)!=-1}">
+				<input type="button" ng-click="data.availability.roles.indexOf(r)<0 && data.availability.roles.push(r) || data.availability.roles.splice(data.availability.roles.indexOf(r),1)" value="{{r}}" class="btn btn-default btn-block" ng-class="{'btn-info':data.availability.roles && data.availability.roles.indexOf(r)!=-1}">
 			</div>
 			<div class="col-sm-2">
-				<input type="button" value="no preference" ng-click="data.role=['Driver', 'Kitchen', 'Office']" class="btn btn-default btn-block" ng-class="{'btn-info':data.role && !data.role.length}">
+				<input type="button" value="no preference" ng-click="data.availability.roles=['Driver', 'Kitchen', 'Office']" class="btn btn-default btn-block" ng-class="{'btn-info':data.availability.roles && !data.availability.roles.length}">
 			</div>
 		</div>
 		<div class="form-group">
