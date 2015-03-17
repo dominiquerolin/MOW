@@ -50,24 +50,22 @@ angular.module('Volunteer', [])
 	'$http',
 	'$routeParams',
 	function($scope,$http,$routeParams){
-		console.log("VolunteerCtrl");
-		
+		console.log("VolunteerCtrl");		
 		
 		// get volunteer data
 		$http.get('/api/volunteer/' + $routeParams.username)
 		.success(function(result) {
+			console.log("API result received",result);	
 			if(result.status) {
-				console.log('edit existing', result);
-				$scope.data = result.data;
-				init();
+				console.log('edit existing profile');
+				initScope(result.data);
 			} else {
 				// if no profile found, create one
-				console.log('create new profile',result);
+				console.log('create new profile');
 				$http.post('/api/volunteer/' + $routeParams.username, {username:$routeParams.username})
 				.success(function(result){
-					$scope.data = result.data;
 					displayError("This user doesn't have a volunteer profile yet. Please add details.");
-					init();
+					initScope(result.data);
 				})
 				.error(displayError)
 			}
@@ -75,7 +73,34 @@ angular.module('Volunteer', [])
 		.error(displayError);
 		
 		// init form data
-		function init(err, data) {
+		function initScope(data) {
+			console.log("init scope", data);	
+			$scope.data = data;
+
+			// Frequency table handler
+			$scope.frequency = function( d, f ){
+				var f = $scope.data.availability.frequency;
+				this.d = d;
+				this.toggle = function (w) {
+					f[w][this.d] = !f[w][this.d];
+				},
+				this.isActive = function (w) {
+					return f[w][this.d];
+				},
+				this.toggleAll = function(){
+					var current = this.isActiveAll();
+					for(w in f) {
+						f[w][this.d] = !current;
+					}
+				};
+				this.isActiveAll = function() {
+					for(w in f) {
+						if(!f[w][d]) return false;
+					}
+					return true;
+				};
+				return this;
+			};
 
 			// Get calendars for next months
 			var today = new Date();
@@ -100,30 +125,6 @@ angular.module('Volunteer', [])
 				};
 				this.hasException = function(){
 					return (s.indexOf(this.date)!=-1);
-				};
-				return this;
-			};
-			// Frequency table handler
-			$scope.frequency = function( d, f ){
-				var f = $scope.data.availability.frequency;
-				this.d = d;
-				this.toggle = function (w) {
-					f[w][this.d] = !f[w][this.d];
-				},
-				this.isActive = function (w) {
-					return f[w][this.d];
-				},
-				this.toggleAll = function(){
-					var current = this.isActiveAll();
-					for(w in f) {
-						f[w][this.d] = !current;
-					}
-				};
-				this.isActiveAll = function() {
-					for(w in f) {
-						if(!f[w][d]) return false;
-					}
-					return true;
 				};
 				return this;
 			};

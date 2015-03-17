@@ -19,10 +19,9 @@
 		<td>{{u.username}}</td>
 		<td>{{u.email}}</td>
 		<td>
-			<span class="btn btn-info glyphicon glyphicon-cog" title="Edit User"  ng-click="editUser($index)"></span>
-			<span class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile"  ng-click="viewDetails($index)"></span>
+			<a ng-href="/users/{{u.username}}"><span class="btn btn-info glyphicon glyphicon-cog" title="Edit User"></span></a>
+			<a ng-href="/volunteers/{{u.username}}/availability"><span class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile"></span></a>
 			<span class="btn btn-danger glyphicon glyphicon-remove" title="Delete User" ng-click="confirm('This will delete the user and associated volunteer profile. Proceed?') && deleteUser($index)"></span>
-		
 		</td>
 	</tr>
 </table>
