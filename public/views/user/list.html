@@ -22,7 +22,7 @@
 			<span class="btn btn-info glyphicon glyphicon-cog" title="Edit User"  ng-click="editUser($index)"></span>
 			<span ng-show="u.volunteer_id" class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile"  ng-click="viewDetails($index)"></span>
 			<span ng-hide="u.volunteer_id" class="btn glyphicon btn-warning glyphicon-plus" title="Create Volunteer Profile"  ng-click="viewDetails($index)"></span>
-			<span class="btn btn-danger glyphicon glyphicon-remove" title="Delete User" ng-click="askConfirm('This will delete the user and associated volunteer profile. Proceed?') && deleteUser($index)"></span>
+			<span class="btn btn-danger glyphicon glyphicon-remove" title="Delete User" ng-click="confirm('This will delete the user and associated volunteer profile. Proceed?') && deleteUser($index)"></span>
 		
 		</td>
 	</tr>

@@ -3,8 +3,7 @@ angular
                 'Navigation',
                 'Forms',
                 'User',
-                'Volunteer',
-                'Driver'])
+                'Volunteer'])
                        
 // adds an optional argument to $location.path() to prevent reloading on url change
 .run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {

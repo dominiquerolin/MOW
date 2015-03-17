@@ -1,7 +1,7 @@
 
 <h2>Volunteers list</h2>
 <alert></alert>
-<table class="table" >
+<table class="table" ng-controller="FormController as FormCtrl">
 	<tr>
 		<th>Name</th>
 		<th>Preferred Roles</th>
@@ -17,7 +17,10 @@
 		{{v.availability.frequency}}
 		</td>
 		<td>
-			<span class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile"  ng-click="viewDetails($index)"></span>
+			<a ng-href="/volunteers/{{v.username}}"><span class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile" ></span></a>
+			<!-- 
+			<span class="btn btn-danger glyphicon glyphicon-remove" title="Delete User" ng-click="confirm('This will delete the volunteer profile. Proceed?') && deleteVolunteer($index)"></span>
+		 -->
 		</td>
 	</tr>
 </table>

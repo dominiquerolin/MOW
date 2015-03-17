@@ -9,25 +9,17 @@ angular.module('Volunteer', [])
 	'$routeParams',
 	function($scope,$http,$routeParams){
 		console.log("VolunteerCtrl");
-		$http.get('/api/volunteers/' + $routeParams.username)
+		$http.get('/api/volunteer/' + $routeParams.username)
 		.success(function(result) {
 			if(result.status) {
-				// edit existing
+				console.log('edit existing', result);
 				$scope.data = result.data;
 			} else {
-				// create new profile
+				console.log('create new profile');
 				$scope.data = {
 					username: $routeParams.username
 				}
 			}
-			if(!$scope.data.phone)
-				$scope.data.phone = [null];
-			if(!$scope.data.availability)
-				$scope.data.availability = {
-					roles:[],
-					frequency:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
-					exceptions:[]
-				};
 		})
 		.error(function(data) {
 			console.log( 'Error: ' + data );
@@ -40,7 +32,7 @@ angular.module('Volunteer', [])
 	function($scope, $http, $window) {
 		console.log("VolunteerListCtrl");
 	
-	$http.get('/api/volunteers')
+	$http.get('/api/volunteer')
 	.success(function(volunteers) {
 		console.log(volunteers);
 		$scope.volunteers = volunteers.data;
@@ -48,6 +40,19 @@ angular.module('Volunteer', [])
 	.error(function(err){
 		$scope.alert = {status : false,	message : err };
 	});
+
+	$scope.deleteVolunteer = function(index) {
+		$http.delete('/api/volunteer/' + $scope.volunteers[index].username)
+		.success(function(result) {
+			if(result.status)
+				$scope.volunteers.splice(index,1);
+			else
+				console.log(result.message);
+		})
+		.error(function(err){
+			$scope.alert = {status : false,	message : err };
+		});
+	};
 }])
 .controller('VolunteerAvailabilityCtrl', [
 	'$scope',

@@ -12,7 +12,7 @@ angular.module('User', [])
 	function($scope, $http, $window,$routeParams) {
 		console.log("UserCtrl");
 
-		$http.get('/api/users/'+$routeParams.username)
+		$http.get('/api/user/'+$routeParams.username)
 		.success(function(user) {
 			$scope.data = user.data;
 			$scope.roles = ['User','Admin','SuperAdmin'];
@@ -30,7 +30,7 @@ angular.module('User', [])
 	function($scope, $http, $window) {
 		console.log("UserListCtrl");
 
-		$http.get('/api/users')
+		$http.get('/api/user')
 		.success(function(users) {
 			console.log(users);
 			$scope.users = users.data;
@@ -39,19 +39,12 @@ angular.module('User', [])
 		.error(function(err){
 			$scope.alert = {status : false,	message : err };
 		});
-		
 
-		$scope.askConfirm = function(msg) {
-			return $window.confirm(msg);
-		};
-		$scope.editUser = function(index) {
-			$window.location.href = '/users/'+$scope.users[index].username;
-		};
 		$scope.viewDetails = function(index) {
 			$window.location.href = '/volunteers/'+$scope.users[index].username;
 		};
-		$scope.deleteUser = function(index) {			 
-			$http.delete('/api/users/' + $scope.users[index]._id)
+		$scope.deleteUser = function(index) {
+			$http.delete('/api/user/' + $scope.users[index].username)
 			.success(function(result) {
 				if(result.status)
 					$scope.users.splice(index,1);

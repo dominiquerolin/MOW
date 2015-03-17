@@ -6,30 +6,30 @@
 		<alert></alert>
 		<div class="form-group">
 			<label class="control-label col-sm-2">Registration</label>
-			<div class="col-sm-4"><input name="car_registration" type="text" ng-model="data.car_registration" class="form-control" required></div>		
+			<div class="col-sm-4"><input name="car_registration" type="text" ng-model="data.driver.car_registration" class="form-control" required></div>		
 			<div class="col-sm-6" ng-show="Driver.$dirty && Driver.$submitted">
-				<span class="text-danger" ng-show=" !data.car_registration">Registration is required.</span>
+				<span class="text-danger" ng-show=" !data.driver.car_registration">Registration is required.</span>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">Insurer</label>
-			<div class="col-sm-4"><input name="insurer" type="text" ng-model="data.insurer" class="form-control" required></div>		
+			<div class="col-sm-4"><input name="insurer" type="text" ng-model="data.driver.insurer" class="form-control" required></div>		
 			<div class="col-sm-6" ng-show="Driver.$dirty && Driver.$submitted">
-				<span class="text-danger" ng-show=" !data.insurer">Insurer is required.</span>
+				<span class="text-danger" ng-show=" !data.driver.insurer">Insurer is required.</span>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">Policy Nr.</label>
-			<div class="col-sm-4"><input name="car_policy_nr" type="text" ng-model="data.policy_nr" class="form-control" required></div>		
+			<div class="col-sm-4"><input name="car_policy_nr" type="text" ng-model="data.driver.policy_nr" class="form-control" required></div>		
 			<div class="col-sm-6" ng-show="Driver.$dirty && Driver.$submitted">
-				<span class="text-danger" ng-show="!data.policy_nr">Policy Nr. is required.</span>
+				<span class="text-danger" ng-show="!data.driver.policy_nr">Policy Nr. is required.</span>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">Prefered routes</label>
 			<div class="col-sm-4" >
-				<input ng-repeat="r in [1,2,3,4,5]"  type="button" ng-click="data.routes.indexOf(r)<0 && data.routes.push(r) && Driver.$setDirty()" value="{{r}}" class="btn btn-default" ng-class="{'btn-info':data.routes && data.routes.indexOf(r)!=-1}" style="margin-right:5px;">
-				<input type="button" value="no preference" ng-click="data.routes=[1,2,3,4,5] && Driver.$setDirty()" class="btn btn-default pull-right" ng-class="{'btn-info':!data.routes.length}">
+				<input ng-repeat="r in [1,2,3,4,5]"  type="button" ng-click="data.driver.routes.indexOf(r)<0 && data.driver.routes.push(r) && Driver.$setDirty()" value="{{r}}" class="btn btn-default" ng-class="{'btn-info':data.driver.routes && data.driver.routes.indexOf(r)!=-1}" style="margin-right:5px;">
+				<input type="button" value="no preference" ng-click="data.driver.routes=[1,2,3,4,5] && Driver.$setDirty()" class="btn btn-default pull-right" ng-class="{'btn-info':!data.driver.routes.length}">
 			</div>
 		</div>
 		<div class="form-group">
