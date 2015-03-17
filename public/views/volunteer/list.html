@@ -3,24 +3,30 @@
 <alert></alert>
 <table class="table" ng-controller="FormController as FormCtrl">
 	<tr>
+		<th></th>
 		<th>Name</th>
 		<th>Preferred Roles</th>
 		<th>Availability</th>
-		<th></th>
+		<th>This month</th>
 	</tr>
 	<tr ng-repeat="v in volunteers track by $index">
-		<td>{{v.first_name}} {{v.last_name}}</td>
-		<td>
-			<ul><li ng-repeat="r in v.availability.roles">{{r}}</li></ul>
-		</td>
-		<td>
-		{{v.availability.frequency}}
-		</td>
 		<td>
 			<a ng-href="/volunteers/{{v.username}}"><span class="btn glyphicon btn-info glyphicon-pencil" title="Edit Volunteer Profile" ></span></a>
 			<!-- 
 			<span class="btn btn-danger glyphicon glyphicon-remove" title="Delete User" ng-click="confirm('This will delete the volunteer profile. Proceed?') && deleteVolunteer($index)"></span>
 		 -->
+		</td>
+		<td>{{v.first_name}} {{v.last_name}}</td>
+		<td>
+			<ul><li ng-repeat="r in v.availability.roles">{{r}}</li></ul>
+		</td>
+		<td ng-init="list = humanReadableFrequency(v.availability.frequency)">
+			<ul>
+			<li ng-hide="d==0" ng-repeat="(days, d) in list">{{d}} {{days}}{{d>1?'s':''}} a month</li>
+			</ul>
+		</td>
+		<td>
+		TODO: calendar
 		</td>
 	</tr>
 </table>

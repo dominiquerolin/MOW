@@ -7,9 +7,9 @@
 		<li ng-class="{'active':TabCtrl.isSet('driver')}"><a href="#" ng-click="TabCtrl.setTab('driver');">Driver Info</a></li>
 	</ul>
 	</nav>
-	{{data}}
+
 	<div ng-show="TabCtrl.isSet('contact')" ng-include="'/views/volunteer/_form_contact.html'"></div>
-	<div ng-show="TabCtrl.isSet('availability')" ng-include="'/views/volunteer/_form_availability.html'" ng-controller="VolunteerAvailabilityCtrl"></div>
+	<div ng-show="TabCtrl.isSet('availability')" ng-include="'/views/volunteer/_form_availability.html'"></div>
 	<div ng-show="TabCtrl.isSet('driver')" ng-include="'/views/volunteer/_form_driver.html'"></div>
 
  </section>
