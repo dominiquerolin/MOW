@@ -3,8 +3,9 @@
 		role="form" class="form-horizontal" novalidate 
 		name="VolunteerAvailability"	
 		ng-submit="submitForm(VolunteerAvailability)">
-		
+
 		<alert></alert>
+		
 		<div class="form-group">
 			<label class="control-label col-sm-2">Prefered role</label>
 			<div class="col-sm-1" ng-repeat="r in ['Driver', 'Kitchen', 'Office']" >
@@ -18,31 +19,64 @@
 			<label class="control-label col-sm-2">Frequency</label>
 			<div class="col-sm-7">
 				<table class="table">
-					<thead>
-						<tr><th></th><th ng-repeat="ord in ['1st','2d','3rd','4th','5th']">{{ord}}</th></tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="(d,day) in ['Monday','Tuesday','Wednesday','Thursday','Friday']" >
-							<td>
-								<input type="button" class="btn btn-block" value="{{day}}s" 
-								ng-init="f = frequency(d)" 
-								ng-click="f.toggleAll()" 
-								ng-class="{'btn-info':f.isActiveAll(),'btn-default':!f.isActiveAll()}">
-							</td>
-							<td ng-repeat="o in [0,1,2,3,4]">
-								<span class="btn glyphicon" 
-									  ng-class="{'glyphicon-ok bg-success text-success':f.isActive(o), 'btn-default glyphicon-remove text-muted':!f.isActive(o)}"
-									  ng-click="f.toggle(o)"></span>
-							</td>
-						</tr>
-					</tbody>
+						<thead>
+							<tr>
+							<th></th>
+							<th ng-repeat="(d, day) in weekdays">
+								<input type="button" ng-value="day" 
+										class="btn btn-default btn-block" 									
+										ng-class="{'btn-success': data.availability.frequency[0][d]
+																&& data.availability.frequency[1][d]
+																&& data.availability.frequency[2][d]
+																&& data.availability.frequency[3][d]
+																&& data.availability.frequency[4][d]}" 
+										ng-click="status = data.availability.frequency[0][d]
+														&& data.availability.frequency[1][d]
+														&& data.availability.frequency[2][d]
+														&& data.availability.frequency[3][d]
+														&& data.availability.frequency[4][d];
+												  data.availability.frequency[0][d]=!status;
+												  data.availability.frequency[1][d]=!status;
+												  data.availability.frequency[2][d]=!status;
+												  data.availability.frequency[3][d]=!status;
+												  data.availability.frequency[4][d]=!status;" >
+							</th>
+							</tr>
+						</thead>
+						<tbody ng-init="order = ['1st','2d','3rd','4th','5th'];">
+							<tr ng-repeat="(w,week) in data.availability.frequency track by $index">
+								<td><input type="button" 
+										value="{{order[w]}} of the month" 
+										class="btn btn-default btn-block"
+										ng-class="{'btn-success':data.availability.frequency[w][0]
+																&& data.availability.frequency[w][1]
+																&& data.availability.frequency[w][2]
+																&& data.availability.frequency[w][3]
+																&& data.availability.frequency[w][4]}"
+										ng-click="status = data.availability.frequency[w][0]
+														&& data.availability.frequency[w][1]
+														&& data.availability.frequency[w][2]
+														&& data.availability.frequency[w][3]
+														&& data.availability.frequency[w][4];
+												  data.availability.frequency[w][0]=!status;
+												  data.availability.frequency[w][1]=!status;
+												  data.availability.frequency[w][2]=!status;
+												  data.availability.frequency[w][3]=!status;
+												  data.availability.frequency[w][4]=!status;" 
+								></td>
+								<td ng-repeat="(d,status) in week track by $index" class="text-center">
+									<span ng-show="status" class="glyphicon glyphicon-ok btn bg-success text-success" ng-click="data.availability.frequency[w][d]=!status;"></span>
+									<span ng-hide="status" class="glyphicon glyphicon-remove btn btn-default" ng-click="data.availability.frequency[w][d]=!status;"></span>
+								</td>
+							</tr>
+						</tbody>
 				</table>
 			</div> 
 			<div class="col-sm-3">
-				<label>Exceptions</label>
-				<p>Click on the calendars below to add/remove an exception</p>
+				<label>Off days</label>
+				<p>Click on the calendars below to add/remove an off-day</p>
 					<ul class="list-unstyled" style="height:200px;overflow-y:auto;">
-						<li ng-repeat="date in data.availability.exceptions track by $index">{{date}}</li>
+						<li ng-repeat="date in data.availability.off_days track by $index">{{date}}</li>
 					</ul>
 			</div>
 			
@@ -52,13 +86,18 @@
 			<div class="col-sm-2" ng-repeat="(m, month) in calendars">				
 				{{m|date:'MMMM yyyy'}}
 				<table class="table table-condensed">
-					<tr><th ng-repeat="n in ['M','T','W','T','F'] track by $index">{{n}}</th>
+					<tr><th ng-repeat="n in ['M','T','W','T','F'] track by $index"  class="text-center">{{n}}</th>
 					<tr ng-repeat="(w,week) in month track by $index">
 						<td ng-repeat="(d,day) in week track by $index">
-							<span class="btn btn-xs"
-							ng-init="offset = month[0][d]?0:1;e=exception(m, day);" 
-							ng-class="{ 'bg-success' : day && data.availability.frequency[w-offset][d], 'bg-danger': e.hasException()}"
-							ng-click="e.toggle()">{{day}}</span>
+							<span class="btn btn-xs" style="width:100%;"
+							ng-init="offset = month[0][d]?0:1;
+									date = m.substr(0,8)+ ('00'+day).slice(-2);
+									i = data.availability.off_days.indexOf(date);" 
+							ng-class="{ 
+								'bg-success' : day && data.availability.frequency[w-offset][d], 
+								'bg-danger': i!=-1
+								}"
+							ng-click="i!=-1 ? off_days.splice(i,1) : off_days.push(date).sort()">{{day}}</span>
 						</td>
 					</tr>
 				</table>

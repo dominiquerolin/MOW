@@ -15,8 +15,8 @@ module.exports = mongoose.model('Volunteer', {
 	},
 	availability : {
 		roles: Array, // Driver,Kitchen,Office
-		frequency : {type: Array, default: [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},
-		exceptions : Array
+		frequency : {type: Array, default: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]]},
+		off_days : Array
 	},
 	driver: {
 		car_registration : String,
