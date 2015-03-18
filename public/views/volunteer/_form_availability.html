@@ -81,6 +81,7 @@
 			</div>
 			
 		</div>
+		{{data.availability}}
 		<div class="form-group">
 			<label class="control-label col-sm-2">Preview</label>
 			<div class="col-sm-2" ng-repeat="(m, month) in calendars">				
@@ -91,13 +92,14 @@
 						<td ng-repeat="(d,day) in week track by $index">
 							<span class="btn btn-xs" style="width:100%;"
 							ng-init="offset = month[0][d]?0:1;
-									date = m.substr(0,8)+ ('00'+day).slice(-2);
-									i = data.availability.off_days.indexOf(date);" 
+									date = m.substr(0,8)+ ('00'+day).slice(-2);" 
 							ng-class="{ 
 								'bg-success' : day && data.availability.frequency[w-offset][d], 
-								'bg-danger': i!=-1
+								'bg-danger': day && data.availability.off_days.indexOf(date)!=-1
 								}"
-							ng-click="i!=-1 ? off_days.splice(i,1) : off_days.push(date).sort()">{{day}}</span>
+							ng-click="i=data.availability.off_days.indexOf(date); 
+									  (i!=-1 ? data.availability.off_days.splice(i,1) : data.availability.off_days.push(date));
+									  data.availability.off_days.sort()">{{day}}</span>
 						</td>
 					</tr>
 				</table>

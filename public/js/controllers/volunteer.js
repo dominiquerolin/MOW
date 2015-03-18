@@ -1,8 +1,6 @@
 
 var weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
-function displayError(err) {
-	$scope.alert = {status:false,data:null,message:err};
-};
+
 /*
  * Volunteer controllers handle the actions related to the volunteers personal infos 
  */
@@ -20,7 +18,7 @@ angular.module('Volunteer', [])
 			console.log(volunteers);
 			$scope.volunteers = volunteers.data;
 		})
-		.error(displayError);
+		.error(function (err) { $scope.alert = {status:false, message:err}; });
 	
 		$scope.deleteVolunteer = function(index) {
 			$http.delete('/api/volunteer/' + $scope.volunteers[index].username)
@@ -30,7 +28,7 @@ angular.module('Volunteer', [])
 				else
 					console.log(result.message);
 			})
-			.error(displayError);
+			.error(function (err) { $scope.alert = {status:false, message:err}; });
 		};
 		
 		$scope.humanReadableFrequency = function(freq) {
@@ -59,20 +57,21 @@ angular.module('Volunteer', [])
 			console.log("API result received",result);	
 			if(result.status) {
 				console.log('edit existing profile');
-				initScope(result.data);
+				$scope.data = result.data;
 			} else {
 				// if no profile found, create one
 				console.log('create new profile');
 				$http.post('/api/volunteer/' + $routeParams.username, {username:$routeParams.username})
 				.success(function(result){
-					displayError("This user doesn't have a volunteer profile yet. Please add details.");
-					initScope(result.data);
+					$scope.alert = {status:false, message:"This user doesn't have a volunteer profile yet. Please add details."};
+					$scope.data = result.data;
 				})
-				.error(displayError)
+				.error(function (err) { $scope.alert = {status:false, message:err}; })
 			}
 		})
-		.error(displayError);
+		.error(function (err) { $scope.alert = {status:false, message:err}; });
 
+		$scope.weekdays = weekdays;
 		// Get calendars for next months
 		var today = new Date();
 		$http.get('/api/calendar/2015/'+(today.getMonth()+1)+'-'+(today.getMonth()+5))
@@ -80,15 +79,6 @@ angular.module('Volunteer', [])
 			if(res.status)
 				$scope.calendars = res.data;
 		})
-		.error(displayError);
-		
-		
-		// init form data
-		function initScope(data) {
-			console.log("init scope", data);	
-			$scope.data = data;
-			$scope.weekdays = weekdays;
-			$scope.data.availability.off_days = $scope.data.availability.exceptions;
-		}
+		.error(function (err) { $scope.alert = {status:false, message:err}; });
 
 }]);
