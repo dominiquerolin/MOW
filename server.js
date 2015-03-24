@@ -1,24 +1,24 @@
 // modules =================================================
 var express        = require('express');
+var session        = require('express-session')
 var app            = express();
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var mongoose       = require('mongoose');
+var passport 	   = require('passport');
+var LocalStrategy  = require('passport-local').Strategy;
 
 // configuration ===========================================
-    
 var db = require('./config/db');
-mongoose.connect(db.url, function(err) {
-	if(err) console.log("Cannot connect to DB");
-	else console.log("Connected to DB");
-});
 
 // set our port
 var port = process.env.PORT || 8080; 
 
 // connect to our mongoDB database 
-// (uncomment after you enter in your own credentials in config/db.js)
-// mongoose.connect(db.url); 
+mongoose.connect(db.url, function(err) {
+	if(err) console.log("Cannot connect to DB: "+db.url);
+	else console.log("Connected to DB: "+db.url);
+});
 
 // get all data/stuff of the body (POST) parameters
 // parse application/json 
@@ -35,6 +35,17 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public')); 
+
+// General session handling
+app.use(session({ secret: 'drumkit rollercoaster noob', resave: false, saveUninitialized: false }));
+
+// Passport auth
+var User = require('./app/models/user');
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // routes ==================================================
 require('./app/routes')(app);

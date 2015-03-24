@@ -15,6 +15,9 @@ angular.module('appRoutes', [])
 	            templateUrl: 'views/user/profile.html',
 	            controller: 'UserCtrl'
 	        })
+		    .when('/login', {
+		        templateUrl: 'views/user/login.html'
+		    })
 		    .when('/register', {
 		        templateUrl: 'views/user/register.html'
 		    })

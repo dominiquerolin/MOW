@@ -23,15 +23,17 @@ angular.module('Forms', [])
 			}
 				
 			
-			// Sanitize data
+			// Sanitize data and set post url
 			var post_url = '';
 			switch (frm.$name) {
+				case 'Login':
+					post_url = '/login';
+					break;
 				case 'Register':
-					post_url = '/api/user/';
+					post_url = '/register';
 					break;
 				case 'User':
-					post_url = '/api/user/' + $scope.data.username;
-					
+					post_url = '/api/user/' + $scope.data.username;					
 					break;
 				case 'Driver':
 				case 'VolunteerAvailability':
@@ -54,22 +56,20 @@ angular.module('Forms', [])
 				.post(post_url, $scope.data)
 				.success(function(result) {
 					console.log('Success:',	result);
+					$scope.alert = result;
 					if(result.status) {
-						if (frm.$name == 'Register') {
-							$scope.alert = {
-								status : true,
-								message : 'Creation successful!'
-							};
-							$location.path('/volunteers/'+ $scope.data.username);
-						} else {
-							$scope.alert = {
-								status : true,
-								message : 'Update successful!'
-							};
-							frm.$setPristine();
+						// Action after success
+						switch(frm.$name) {
+							case 'Login':
+								$location.path('/users/'+ $scope.data.username);
+								break;								
+							case 'Register':
+								$location.path('/volunteers/'+ $scope.data.username);
+								break;
+							default:
+								frm.$setPristine();
+								break;
 						}
-					} else {
-						$scope.alert = result;
 					}
 						
 				})

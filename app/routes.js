@@ -2,10 +2,10 @@ module.exports = function(app) {
 
 	
 	// Generic callback function for all APIs
-	function sendJSON(res, err,data) {
+	function sendJSON(res, err, data, msg) {
 		if(err) res.json({status:false, message:err, data:null});
 		else if (!data) res.json({status:false, message:'No results', data:null});
-		else res.json({status:true, message: 'Success', 'data': data}); 
+		else res.json({status:true, message: (!msg?'Success':msg), 'data': data}); 
 	}
 	
 	// USER API
@@ -71,10 +71,50 @@ module.exports = function(app) {
 		Calendar.getCalendars(req.params.year, req.params.month, function(err,data){ sendJSON(res,err,data); });
 	});
 
+	// AUTHENTICATION
+	// =========================================================
+	var passport = require('passport');
+	var User = require('./models/user');
+
+	app.post('/register', function(req, res) {
+		console.log('register new user',req)
+	    User.register(new User({ username : req.body.username }), req.body.password, function(err, data) {
+	        if (err) {
+	        	return sendJSON(res,err.message,data);
+	        }
+	        console.log('authenticate with passport');
+	        passport.authenticate('local')(req, res, function () {
+	        	return sendJSON(res,err,data,'Auth OK');
+	        });
+	    });
+	});
+	app.post('/login', function(req, res, next) {
+        console.log('POST /login');
+		passport.authenticate('local', function(err, data, msg) {
+	        console.log('authenticate with passport');
+			if(err)
+				return sendJSON(res,'Error authenticating',data,msg);
+			if(!data)
+				return sendJSON(res,'Wrong username or password',data,msg);
+
+			req.login(data, function(err) {
+		        console.log('login with passport');
+				return sendJSON(res, err, data, (err?null:'Logged in'));
+			});
+		})(req, res, next);
+	});
+	
+	app.get('/logout', function(req, res) {
+        console.log('logout');
+	    req.logout();
+	    res.redirect('/');
+	});
+	
 	// FRONT-END routes
 	// =========================================================
 	// handled by Angular in /public/js/routes.js
 	app.get('*', function(req, res) {
+		console.log('req.session.passport:',req.session.passport);
 		res.sendfile('./public/views/index.html');
 	});
 };

@@ -1,0 +1,36 @@
+
+<form 
+	ng-controller="FormController as FormCtrl"
+	role="form" class="form-horizontal" novalidate 
+	name="Login"
+	ng-submit="Login.$dirty && submitForm(Login)">
+	
+	<h2>Login</h2>
+	<alert></alert>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Username</label>
+		<div class="col-sm-4"><input name="username" id="username" type="text" ng-model="data.username" class="form-control" placeholder="Enter Username" ng-pattern="/^[a-z0-9]+[a-z0-9\.\-]+[a-z0-9]+$/i" ng-minlength="3" ng-maxlength="32"></div>
+		<div class="col-sm-6" ng-show="Login.$dirty && Login.$submitted">
+			<span class="text-danger" ng-show="!Login.username.$viewValue">Username is required.</span>
+			<span ng-show="Login.$dirty && Login.$submitted">
+				<span class="text-danger" ng-show="Login.username.$error.minlength">Username must be at least 3 characters.</span>
+				<span class="text-danger" ng-show="Login.username.$error.maxlength">Username must be 32 characters or less.</span>
+				<span class="text-danger" ng-show="!Login.username.$error.minlength && !Login.username.$error.maxlength && Login.username.$error.pattern">Username is invalid: authorized characters are {A-Z} {0-9} {dot} {dash} {underscore}.</span>
+			</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">Password</label>
+		<div class="col-sm-4"><input name="password" id="password" type="password" ng-model="data.password" class="form-control" required placeholder="Enter Password"></div>
+		<div class="col-sm-6" ng-show="Login.$dirty && Login.$submitted">
+			<span class="text-danger" ng-show="!Login.password.$viewValue">Password is required.</span>
+			<span class="text-danger" ng-show="Login.password.$viewValue && Login.password.$invalid">Password is invalid.</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-6">
+			<input type="submit" value="Login" class="btn btn-primary pull-right" >
+		</div>
+	</div>
+
+</form>
