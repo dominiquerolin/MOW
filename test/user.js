@@ -1,21 +1,31 @@
 var expect = require("chai").expect;
 var mongoose       = require('mongoose');
 var db = require('../config/db');
-var User = require('../app/modules/user');
+var User = require('../app/modules/crud')('user');
 
 var new_user = {username:'new_user', email:'user@me.com', password:'user'};
 var existing_user = {username:'eraserqueen'};
 var bad_user = {username:'tonyabott'};
 
-mongoose.connect(db.url, function(err) {
-	if(err) console.log("Cannot connect to DB");
-	else {
-		console.log("Connected to DB");
-	}
-});
-
+var db;
 
 describe('User', function(){
+	
+	before(function(done) {
+        db = mongoose.connect(db.url, function(err) {
+    		if(err) console.log("Cannot connect to DB");
+    		else {
+    			console.log("Connected to DB");
+    		}
+    	});
+        done();
+    });
+
+    after(function(done) {
+        mongoose.connection.close();
+        done();
+    });
+
 	it('should have a get method', function(){
 		expect(typeof(User.get)).to.equal('function');
 	});
