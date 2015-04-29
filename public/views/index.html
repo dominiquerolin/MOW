@@ -21,9 +21,10 @@
     <script src="js/controllers/form.js"></script>
     <script src="js/controllers/user.js"></script>
     <script src="js/controllers/volunteer.js"></script>
+    <script src="js/services/auth.js"></script>
 </head>
 <body>
-<div class="container" ng-app="MOW" >
+<div class="container" ng-app="MOW"  ng-controller="ApplicationController as AppCtrl">
 
     <!-- HEADER -->
     <nav class="navbar navbar-inverse">
@@ -33,15 +34,19 @@
 
         <!-- LINK TO OUR PAGES. ANGULAR HANDLES THE ROUTING HERE -->
         <ul class="nav navbar-nav">
-            <li><a href="/users">Users</a></li>
-            <li><a href="/volunteers">Volunteers</a></li>
-            <li><a href="/register">Register</a></li>
-            <li><a href="/login">Login</a></li>
+            <li ng-show="!currentUser"><a href="/register">Register</a></li>
+            <li ng-show="!currentUser"><a href="/login">Login</a></li>
+            <li ng-hide="!currentUser"><a href="/users/{{currentUser.username}}">Welcome, {{currentUser.username}} (edit profile)</a></li>
+            <li ng-show="currentUser.role>0"><a href="/users">Users</a></li>
+            <li ng-show="currentUser.role>0"><a href="/volunteers">Volunteers</a></li>
         </ul>
     </nav>
 
+	<login-form ng-show="visible"></login-form>
+	
     <!-- ANGULAR DYNAMIC CONTENT -->
     <div ng-view></div>
+
 
 </div>
 </body>

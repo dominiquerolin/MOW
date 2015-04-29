@@ -1,4 +1,5 @@
 angular.module('Forms', [])
+
 .controller('FormController',[
 	'$scope',
 	'$http',
@@ -22,7 +23,6 @@ angular.module('Forms', [])
 				return;
 			}
 				
-			
 			// Sanitize data and set post url
 			var post_url = '';
 			switch (frm.$name) {
@@ -97,12 +97,5 @@ angular.module('Forms', [])
 				ngModel.$validate();
 			});
 		}
-	};
-})
-.directive("alert", function() {
-
-	return {
-		restrict : 'E',
-		templateUrl : 'views/_elements/alert.html'
 	};
 });
