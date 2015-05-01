@@ -12,14 +12,23 @@ angular.module('Forms', [])
 				username : '',
 				password : ''
 			};
-			$scope.login = function(credentials) {
+			$scope.submit = function(credentials) {
+				if (!$scope.Login.$valid) {
+					$scope.alert = {
+						status : false,
+						message : 'Please fix the validation errors below.'
+					};
+					return;
+				}
 				AuthService
 					.login(credentials)
 					.then(
 						function(res) {
-							$rootScope.authenticated = AuthService.isAuthenticated();
-							console.log('Redirect after login', $rootScope.redirectTo);
-							$location.path($rootScope.redirectTo ? $rootScope.redirectTo : '/users/' + res.data.username);
+							$scope.alert = res.data;
+							if(AuthService.isAuthenticated()) {
+								console.log('Redirect after login', $rootScope.redirectTo);
+								$location.path($rootScope.redirectTo ? $rootScope.redirectTo : '/users/' + res.data.username);
+							}
 						});
 			}
 		} ])
@@ -53,7 +62,7 @@ angular.module('Forms', [])
 
 			if (!frm.$valid) {
 				$scope.alert = {
-					error : true,
+					status: false,
 					message : 'Please fix the validation errors below.'
 				};
 				return;
