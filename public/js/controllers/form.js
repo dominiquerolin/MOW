@@ -26,9 +26,9 @@ angular.module('Forms', [])
 						function(res) {
 							$scope.alert = res.data;
 							if(AuthService.isAuthenticated()) {
-								console.log(res);
+								$rootScope.authenticated = true;
 								console.log('Redirect after login', $rootScope.redirectTo);
-								$location.path($rootScope.redirectTo ? $rootScope.redirectTo : '/users/' + credentials.username);
+								$location.path($rootScope.redirectTo ? $rootScope.redirectTo : '/users/' + credentials.username, true);
 							}
 						});
 			}
