@@ -12,16 +12,16 @@ module.exports = function(app) {
 	// =========================================================
 	// read
 	 app.get('/api/me', function(req,res) {
-		 console.log('/api/me/', req.user);
+		 //console.log('/api/me/', req.user);
 		 res.json(req.user ? req.user : null);
 	 });
 	app.get('/api/:model/:username?', function(req, res) {
 		var CRUD = require('./modules/crud')(req.params.model);
 		if(!req.params.username) {
-			console.log('get all ');
+			//console.log('get all ');
 			CRUD.getAll(function(err,data){ sendJSON(res,err,data); });
 		} else {
-			console.log('get one '+':'+req.params.username);
+			//console.log('get one '+':'+req.params.username);
 			CRUD.get(req.params.username, function(err,data){ sendJSON(res,err,data); });
 		}
 	});
@@ -32,7 +32,7 @@ module.exports = function(app) {
 		console.log('update existing '+':'+req.params.username);
 		CRUD.update(req.params.username, req.body, function(err,data){ 
 			if(err || !data) {
-				console.log('no existing volunteer found, create new ');
+				//console.log('no existing volunteer found, create new ');
 				CRUD.create(req.body, function(err,data){ sendJSON(res,err,data); });
 			} else {
 				sendJSON(res,err,data);
@@ -49,7 +49,7 @@ module.exports = function(app) {
 				sendJSON(res,err,volunteerData);
 			else {
 				var User = require('./modules/crud')('user');
-				console.log('delete user :'+req.params.username);
+				//console.log('delete user :'+req.params.username);
 				User.remove(req.params.username, function(err, userData){
 					sendJSON(res,err,userData); 
 				});
@@ -59,7 +59,7 @@ module.exports = function(app) {
 	});
 	app.delete('/api/volunteer/:username', function(req,res){
 		var Volunteer = require('./modules/crud')('volunteer');
-		console.log('delete volunteer :'+req.params.username);
+		//console.log('delete volunteer :'+req.params.username);
 		Volunteer.remove(req.params.username, function(err, volunteerData){
 			sendJSON(res,err,volunteerData);
 		});
@@ -81,12 +81,12 @@ module.exports = function(app) {
 	var User = require('./models/user');
 
 	app.post('/register', function(req, res) {
-		console.log('register new user',req)
+		//console.log('register new user',req)
 	    User.register(new User({ username : req.body.username }), req.body.password, function(err, data) {
 	        if (err) {
 	        	return sendJSON(res,err.message,data);
 	        }
-	        console.log('authenticate with passport');
+	        //console.log('authenticate with passport');
 	        passport.authenticate('local')(req, res, function () {
 	        	return sendJSON(res,err,data,'Auth OK');
 	        });
@@ -95,14 +95,14 @@ module.exports = function(app) {
 	app.post('/login', function(req, res, next) {
         console.log('POST /login');
 		passport.authenticate('local', function(err, data, msg) {
-	        console.log('authenticate with passport');
+	        //console.log('authenticate with passport');
 			if(err)
 				return sendJSON(res,'Error authenticating',data,msg);
 			if(!data)
 				return sendJSON(res,'Wrong username or password',data,msg);
 
 			req.login(data, function(err) {
-		        console.log('login with passport', req.user);
+		        //console.log('login with passport', req.user);
 				return sendJSON(res, err, data, (err?null:'Logged in'));
 			});
 		})(req, res, next);
