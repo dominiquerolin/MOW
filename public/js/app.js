@@ -4,56 +4,53 @@ var MOW = angular.module('MOW', ['ngRoute', 'appRoutes',
                 'User',
                 'Volunteer']);
                 
-
-MOW.controller('ApplicationController', ['$scope','$http', 'Session', function($scope, $http, Session){
-	// get session info
-	$http.get('/api/me').then(function(session){
-		$scope.currentUser = Session.create(session.data)['User'];
-		console.log(Session.User);
-	});
-}]);
-
 MOW.directive("alert", function() {
-
 	return {
 		restrict : 'E',
 		templateUrl : 'views/modal/alert.html',
 	};
 });
-MOW.directive("loginForm", ['AUTH_EVENTS', function(AUTH_EVENTS) {
 
-	return {
-		restrict : 'E',
-		templateUrl : 'views/user/login.html',
-		link : function (scope) {
-		      var showDialog = function () {
-		          scope.visible = true;
-		        };
-		    
-		        scope.visible = false;
-		        scope.$on(AUTH_EVENTS.loginRequired, showDialog);
-		      }
+MOW.controller('AppController', ['$rootScope','$http', 'Session', function($rootScope, $http, Session){
 
-	};
+	$rootScope.Session = null;
+	$rootScope.authenticated = null;
+	$rootScope.requiresLogin = null;
+	
+	$rootScope.loadCurrentUser = function() {
+		return $http.get('/api/me').then(function(res){ 
+			$rootScope.Session = Session.create(res.data);
+			$rootScope.authenticated = !!Session.User;
+			console.log('added session info to scope');
+		});
+	}
 }]);
-// adds an optional argument to $location.path() to prevent reloading on url change
-MOW.run([
-	'$route',
-	'$rootScope',
-	'$location',
-	function($route, $rootScope, $location) {
-		var original = $location.path;
-		$location.path = function(path, reload) {
-			if (reload === false) {
-				var lastRoute = $route.current;
-				var un = $rootScope.$on(
-						'$locationChangeSuccess',
-						function() {
-							$route.current = lastRoute;
-							un();
-						});
-			}
-			return original.apply($location, [ path ]);
-		};
-	} ]);
 
+MOW.run([
+	'$rootScope', 
+	'AuthService', 
+	'AUTH_EVENTS', 
+	'$location', 
+	function( $rootScope, AuthService, AUTH_EVENTS ){
+	
+	$rootScope.$on('$routeChangeStart', function(event, next){
+		console.log('Event', event, next);
+		
+		var requiresLogin = !!next.auth && !!next.auth.roles;
+		$rootScope.requiresLogin = requiresLogin;
+		console.log('requiresLogin? ', requiresLogin);
+		
+		if(next.$$route.originalPath != '/logout') {
+			$rootScope.loadCurrentUser().then(function(){
+				var authenticated = AuthService.isAuthenticated();
+				$rootScope.authenticated = authenticated;
+				
+				if(requiresLogin && (!authenticated || !AuthService.isAuthorized(next.auth.roles))) {
+					event.preventDefault();
+					$rootScope.$broadcast(AUTH_EVENTS.loginRequired);
+					$rootScope.redirectTo = next.$$route.originalPath;
+				}
+			});
+		}
+	});
+}]);

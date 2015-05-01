@@ -1,5 +1,41 @@
 angular.module('Forms', [])
+// Login
+.controller(
+		'LoginController',
+		[
+		'$scope',
+		'$rootScope',
+		'AuthService',
+		'$location',
+		function($scope, $rootScope, AuthService, $location) {
+			$scope.credentials = {
+				username : '',
+				password : ''
+			};
+			$scope.login = function(credentials) {
+				AuthService
+					.login(credentials)
+					.then(
+						function(res) {
+							$rootScope.authenticated = AuthService.isAuthenticated();
+							console.log('Redirect after login', $rootScope.redirectTo);
+							$location.path($rootScope.redirectTo ? $rootScope.redirectTo : '/users/' + res.data.username);
+						});
+			}
+		} ])
+.directive("loginForm", ['AUTH_EVENTS', function(AUTH_EVENTS) {
+	return {
+		restrict : 'E',
+		templateUrl : 'views/user/login.html',
+		link : function (scope) {
+			scope.$on('$routeChangeStart', function(){scope.requiresLogin = false;});
+			scope.$on(AUTH_EVENTS.loginRequired, function(){scope.requiresLogin = true;});
+			scope.$on(AUTH_EVENTS.sessionTimeout, function(){scope.requiresLogin = true;});
+		}
 
+	};
+}])
+// Generic
 .controller('FormController',[
 	'$scope',
 	'$http',
@@ -26,9 +62,6 @@ angular.module('Forms', [])
 			// Sanitize data and set post url
 			var post_url = '';
 			switch (frm.$name) {
-				case 'Login':
-					post_url = '/login';
-					break;
 				case 'Register':
 					post_url = '/register';
 					break;
@@ -59,10 +92,7 @@ angular.module('Forms', [])
 					$scope.alert = result;
 					if(result.status) {
 						// Action after success
-						switch(frm.$name) {
-							case 'Login':
-								$location.path('/users/'+ $scope.data.username);
-								break;								
+						switch(frm.$name) {					
 							case 'Register':
 								$location.path('/volunteers/'+ $scope.data.username);
 								break;

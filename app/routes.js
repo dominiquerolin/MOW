@@ -12,13 +12,8 @@ module.exports = function(app) {
 	// =========================================================
 	// read
 	 app.get('/api/me', function(req,res) {
-		 if(req.session.passport.user) {
-			 var CRUD = require('./modules/crud')('user');
-			 CRUD.get(req.session.passport.user, function(err, data){
-				res.json( err ? null : data);
-			 });
-		 }
-		 else res.json(null);
+		 console.log('/api/me/', req.user);
+		 res.json(req.user ? req.user : null);
 	 });
 	app.get('/api/:model/:username?', function(req, res) {
 		var CRUD = require('./modules/crud')(req.params.model);
@@ -107,16 +102,17 @@ module.exports = function(app) {
 				return sendJSON(res,'Wrong username or password',data,msg);
 
 			req.login(data, function(err) {
-		        console.log('login with passport');
+		        console.log('login with passport', req.user);
 				return sendJSON(res, err, data, (err?null:'Logged in'));
 			});
 		})(req, res, next);
 	});
 	
-	app.get('/logout', function(req, res) {
-        console.log('logout');
-	    req.logout();
-	    res.redirect('/');
+	app.post('/logout', function(req, res) {
+		req.user = null;
+		req.session.passport = null;
+		req.logout();
+		res.redirect('/');
 	});
 	// FRONT-END routes
 	// =========================================================

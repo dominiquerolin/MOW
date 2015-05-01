@@ -11,6 +11,15 @@ angular.module('appRoutes', [])
 		    .when('/login', {
 		        templateUrl: 'views/user/login.html'
 		    })
+		    .when('/logout', {
+		        redirectTo: '/',
+		        resolve: {
+		        	auth: function(AuthService){
+		        		AuthService.logout();
+		        	}
+		        }
+		        
+		    })
 		    .when('/register', {
 		        templateUrl: 'views/user/register.html'
 		    })
@@ -20,8 +29,8 @@ angular.module('appRoutes', [])
 	        .when('/users', {
 	            templateUrl: 'views/user/list.html',
 	            controller: 'UserListCtrl',
-	            data: {	            	
-	            	authorizedRoles: [1,2]
+	            auth: {
+	            	roles: [1,2]
 	            }
 	        })
 	        .when('/users/:username', {

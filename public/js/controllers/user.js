@@ -16,7 +16,7 @@ angular.module('User', [])
 		.success(function(user) {
 			$scope.data = user.data;
 			$scope.roles = ['User','Admin','SuperAdmin'];
-			console.log($scope.data);
+
 		})
 		.error(function(err){
 			$scope.alert = {status : false,	message : err };

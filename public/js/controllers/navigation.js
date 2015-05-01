@@ -1,3 +1,25 @@
+//adds an optional argument to $location.path() to prevent reloading on url change
+MOW.run([
+	'$route',
+	'$rootScope',
+	'$location',
+	function($route, $rootScope, $location) {
+		var original = $location.path;
+		$location.path = function(path, reload) {
+			if (reload === false) {
+				var lastRoute = $route.current;
+				var un = $rootScope.$on(
+						'$locationChangeSuccess',
+						function() {
+							$route.current = lastRoute;
+							un();
+						});
+			}
+			return original.apply($location, [ path ]);
+		};
+	} ]);
+
+// Add Navigation module
 angular.module('Navigation', [])
 .controller('TabController', ['$scope', '$location','$route', function($scope,$location,$route){
 	this.tab = $route.current.action;

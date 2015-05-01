@@ -24,30 +24,40 @@
     <script src="js/services/auth.js"></script>
 </head>
 <body>
-<div class="container" ng-app="MOW"  ng-controller="ApplicationController as AppCtrl">
+<div class="container" ng-app="MOW" ng-controller="AppController as AppCtrl">
 
     <!-- HEADER -->
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse"  >
         <div class="navbar-header">
             <a class="navbar-brand" href="/">Home</a>
         </div>
 
         <!-- LINK TO OUR PAGES. ANGULAR HANDLES THE ROUTING HERE -->
-        <ul class="nav navbar-nav">
-            <li ng-show="!currentUser"><a href="/register">Register</a></li>
-            <li ng-show="!currentUser"><a href="/login">Login</a></li>
-            <li ng-hide="!currentUser"><a href="/users/{{currentUser.username}}">Welcome, {{currentUser.username}} (edit profile)</a></li>
-            <li ng-show="currentUser.role>0"><a href="/users">Users</a></li>
-            <li ng-show="currentUser.role>0"><a href="/volunteers">Volunteers</a></li>
+        <ul class="nav navbar-nav" ng-show="authenticated">
+            <li><a href="/users/{{Session.User.username}}">Welcome, {{Session.User.username}}</a>
+            <li><a href="/users/{{Session.User.username}}">Edit profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+            <li ng-show="Session.User.role>0"><a href="/users">Users</a></li>
+            <li ng-show="Session.User.role>0"><a href="/volunteers">Volunteers</a></li>
+        </ul>
+        <ul class="nav navbar-nav" ng-show="!authenticated">
+            <li><a href="/register">Register</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/users">Users</a></li>
         </ul>
     </nav>
-
-	<login-form ng-show="visible"></login-form>
+    
+	<login-form ng-show="!authenticated && requiresLogin"></login-form>
 	
     <!-- ANGULAR DYNAMIC CONTENT -->
-    <div ng-view></div>
+    <div ng-view ng-show="authenticated || !requiresLogin"></div>
 
-
+	<div class="debug">
+	
+            <br/>authenticated: {{authenticated}}
+            <br/>requiresLogin: {{requiresLogin}}
+            <br/>Session: {{Session}}
+    </div>
 </div>
 </body>
 </html>
