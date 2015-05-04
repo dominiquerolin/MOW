@@ -1,9 +1,11 @@
+
 var MOW = angular.module('MOW', ['ngRoute', 'appRoutes',
                 'Navigation',
                 'Forms',
                 'User',
                 'Volunteer']);
-                
+
+MOW.constant('WEEKDAYS', ['Monday','Tuesday','Wednesday','Thursday','Friday']);  
 MOW.directive("alert", function() {
 	return {
 		restrict : 'E',

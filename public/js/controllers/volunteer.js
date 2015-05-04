@@ -1,5 +1,4 @@
 
-var weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 
 /*
  * Volunteer controllers handle the actions related to the volunteers personal infos 
@@ -10,7 +9,8 @@ angular.module('Volunteer', [])
 	'$scope', 
 	'$http',
 	'$window', 
-	function($scope, $http, $window) {
+	'WEEKDAYS',
+	function($scope, $http, $window, WEEKDAYS) {
 		console.log("VolunteerListCtrl");
 	
 		$http.get('/api/volunteer')
@@ -32,12 +32,12 @@ angular.module('Volunteer', [])
 		};
 		
 		$scope.humanReadableFrequency = function(freq) {
-			
+
 			var list = {};
 			for(week in freq) {
 				for(day in freq[week]) {
-					if(!list[weekdays[day]]) list[weekdays[day]] = 0;
-					freq[week][day]==true && list[weekdays[day]]++;
+					if(!list[WEEKDAYS[day]]) list[WEEKDAYS[day]] = 0;
+					freq[week][day]==true && list[WEEKDAYS[day]]++;
 				}
 			}
 			return list;
@@ -48,7 +48,9 @@ angular.module('Volunteer', [])
 	'$scope',
 	'$http',
 	'$routeParams',
-	function($scope,$http,$routeParams){
+	'WEEKDAYS',
+	function($scope,$http,$routeParams,WEEKDAYS){
+		$scope.weekdays = WEEKDAYS;
 		console.log("VolunteerCtrl");		
 		
 		// get volunteer data
@@ -71,7 +73,6 @@ angular.module('Volunteer', [])
 		})
 		.error(function (err) { $scope.alert = {status:false, message:err}; });
 
-		$scope.weekdays = weekdays;
 		// Get calendars for next months
 		var today = new Date();
 		$http.get('/api/calendar/2015/'+(today.getMonth()+1)+'-'+(today.getMonth()+5))
