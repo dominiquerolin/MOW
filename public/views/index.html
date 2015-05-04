@@ -50,7 +50,7 @@
 	<login-form ng-show="!authenticated && requiresLogin"></login-form>
 	
     <!-- ANGULAR DYNAMIC CONTENT -->
-    <div ng-view ng-show="authenticated || !requiresLogin"></div>
+    <div ng-view ng-if="authenticated || !requiresLogin"></div>
 
 	<div class="debug">
 	

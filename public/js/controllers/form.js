@@ -13,7 +13,9 @@ angular.module('Forms', [])
 				password : ''
 			};
 			$scope.submit = function(credentials) {
+				console.log('LoginController.submit');
 				if (!$scope.Login.$valid) {
+					console.log('Form is invalid.');
 					$scope.alert = {
 						status : false,
 						message : 'Please fix the validation errors below.'
@@ -24,8 +26,11 @@ angular.module('Forms', [])
 					.login(credentials)
 					.then(
 						function(res) {
+							console.log('after: AuthService.login');
 							$scope.alert = res.data;
-							if(AuthService.isAuthenticated()) {
+							$rootScope.authenticated = AuthService.isAuthenticated();
+							console.log('isAuthenticated:',$rootScope.authenticated);
+							if($rootScope.authenticated) {
 								$rootScope.authenticated = true;
 								console.log('Redirect after login', $rootScope.redirectTo);
 								$location.path($rootScope.redirectTo ? $rootScope.redirectTo : '/users/' + credentials.username, true);
