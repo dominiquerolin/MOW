@@ -12,6 +12,14 @@ MOW.directive("alert", function() {
 		templateUrl : 'views/modal/alert.html',
 	};
 });
+MOW.directive("debug", function() {
+	return {
+		restrict : 'E',
+		template: "Authenticated: {{authenticated}} | requiresLogin: {{requiresLogin}}" +
+				"<pre>{{debug}}</pre>"+
+				"<pre>{{Session}}</pre>"
+	};
+});
 
 MOW.controller('AppController', ['$rootScope','$http', 'Session', function($rootScope, $http, Session){
 
