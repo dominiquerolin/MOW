@@ -1,0 +1,22 @@
+<h2>Permanent Roster</h2>
+
+<table class="table">
+		<thead>
+			<tr>
+			<th></th>
+			<th ng-repeat="(d, day) in weekdays">
+				{{day}}
+			</th>
+			</tr>
+		</thead>
+		<tbody ng-init="order = ['1st','2d','3rd','4th','5th'];">
+			<tr ng-repeat="(w,week) in roster track by $index">
+				<td>{{order[w]}} of the month</td>
+				<td ng-repeat="(d,status) in week track by $index">
+					{{roster[w][d].length}} available, {{final[w][d].length}} confirmed<br/>
+					<hr/>
+					<button ng-repeat="username in roster[w][d]" class="btn btn-block" ng-class="{'btn-active':final[w][d].indexOf(username)!=-1}">{{username}}</button>
+				</td>
+			</tr>
+		</tbody>
+</table>

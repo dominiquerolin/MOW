@@ -21,6 +21,7 @@
     <script src="js/controllers/form.js"></script>
     <script src="js/controllers/user.js"></script>
     <script src="js/controllers/volunteer.js"></script>
+    <script src="js/controllers/roster.js"></script>
     <script src="js/services/auth.js"></script>
 </head>
 <body>
@@ -39,6 +40,7 @@
             <li><a href="/logout">Logout</a></li>
             <li ng-show="Session.User.role>0"><a href="/users">Users</a></li>
             <li ng-show="Session.User.role>0"><a href="/volunteers">Volunteers</a></li>
+            <li ng-show="Session.User.role>0"><a href="/roster">Roster</a></li>
         </ul>
         <ul class="nav navbar-nav" ng-show="!authenticated">
             <li><a href="/register">Register</a></li>
@@ -52,12 +54,7 @@
     <!-- ANGULAR DYNAMIC CONTENT -->
     <div ng-view ng-if="authenticated || !requiresLogin"></div>
 
-	<div class="debug">
-	
-            <br/>authenticated: {{authenticated}}
-            <br/>requiresLogin: {{requiresLogin}}
-            <br/>Session: {{Session}}
-    </div>
+	<debug></debug>
 </div>
 </body>
 </html>

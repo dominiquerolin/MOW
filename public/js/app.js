@@ -3,7 +3,8 @@ var MOW = angular.module('MOW', ['ngRoute', 'appRoutes',
                 'Navigation',
                 'Forms',
                 'User',
-                'Volunteer']);
+                'Volunteer',
+                'Roster']);
 
 MOW.constant('WEEKDAYS', ['Monday','Tuesday','Wednesday','Thursday','Friday']);  
 MOW.directive("alert", function() {
