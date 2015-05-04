@@ -1,14 +1,23 @@
 module.exports = function(model) {
 	this.db = require('../models/'+model);
 	
-	this.getAll = function(callback) {
-		this.db.find(function(err, data) {
-			return err && callback(err) || callback(null, data);
-		});
-	};
-	
-	this.get = function(username, callback){
-		this.db.findOne({'username':username}, function(err, data) {
+	this.get = function(params, callback){
+		// Get all results
+		if(!params.p1) {
+			return this.db.find(function(err, data) {
+				return err && callback(err) || callback(null, data);
+			});
+		}
+		// get a single result
+		if(params.model == 'roster') {	
+			if(params.p1 && !params.p2)
+				return callback('Missing parameter "ord".');
+			else
+				var search = {day: params.p1, ord: params.p2};
+		} else {
+			var search = {username: params.p1};
+		}
+		return this.db.findOne(search, function(err, data) {
 			return err && callback(err) || callback(null, data);
 		});
 	};
@@ -18,8 +27,8 @@ module.exports = function(model) {
 			return err && callback(err) || callback(null, data);
 		})
 	};
-	this.update = function(username, obj, callback) {
-		this.db.findOneAndUpdate({'username':username}, obj, function(err, data){
+	this.update = function(search, obj, callback) {
+		this.db.findOneAndUpdate(search, obj, function(err, data){
 			if(err) {
 				console.log('ERR:',err);
 				return callback(err);
@@ -27,8 +36,8 @@ module.exports = function(model) {
 			return callback(null, data);
 		});
 	};
-	this.remove = function(username, callback){
-		this.db.findOneAndRemove({'username':username}, function(err, data){
+	this.remove = function(search, callback){
+		this.db.findOneAndRemove(search, function(err, data){
 			return err && callback(err) || callback(null, data);
 		});
 	};

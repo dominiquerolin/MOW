@@ -7,66 +7,9 @@ module.exports = function(app) {
 		else if (!data) res.json({status:false, message:'No results', data:null});
 		else res.json({status:true, message: (!msg?'Success':msg), 'data': data}); 
 	}
-	
-	// USER API
-	// =========================================================
-	// read
-	 app.get('/api/me', function(req,res) {
-		 //console.log('/api/me/', req.user);
-		 res.json(req.user ? req.user : null);
-	 });
-	app.get('/api/:model/:username?', function(req, res) {
-		var CRUD = require('./modules/crud')(req.params.model);
-		if(!req.params.username) {
-			//console.log('get all ');
-			CRUD.getAll(function(err,data){ sendJSON(res,err,data); });
-		} else {
-			//console.log('get one '+':'+req.params.username);
-			CRUD.get(req.params.username, function(err,data){ sendJSON(res,err,data); });
-		}
-	});
-	// create/update
-	app.post('/api/:model/:username?', function(req, res) {
-		var CRUD = require('./modules/crud')(req.params.model);		
-		
-		console.log('update existing '+':'+req.params.username);
-		CRUD.update(req.params.username, req.body, function(err,data){ 
-			if(err || !data) {
-				//console.log('no existing volunteer found, create new ');
-				CRUD.create(req.body, function(err,data){ sendJSON(res,err,data); });
-			} else {
-				sendJSON(res,err,data);
-			}
-		});
-		
-	});
-	// delete (deleting user deletes assoctiated volunteer as well)
-	app.delete('/api/user/:username', function(req,res){
-		var Volunteer = require('./modules/crud')('volunteer');
-		console.log('delete volunteer :'+req.params.username);
-		Volunteer.remove(req.params.username, function(err, volunteerData){
-			if(err)
-				sendJSON(res,err,volunteerData);
-			else {
-				var User = require('./modules/crud')('user');
-				//console.log('delete user :'+req.params.username);
-				User.remove(req.params.username, function(err, userData){
-					sendJSON(res,err,userData); 
-				});
-			}
-		});
-		
-	});
-	app.delete('/api/volunteer/:username', function(req,res){
-		var Volunteer = require('./modules/crud')('volunteer');
-		//console.log('delete volunteer :'+req.params.username);
-		Volunteer.remove(req.params.username, function(err, volunteerData){
-			sendJSON(res,err,volunteerData);
-		});
-		
-	});
 
-	// CALENDAR API
+	
+	// OPEN API
 	// =========================================================
 	// Supports the following queries api/calendar/YYYY (whole year)
 	// api/calendar/YYYY/MM (single month) api/calendar/YYYY/MM-MM (range)
@@ -74,6 +17,11 @@ module.exports = function(app) {
 		var Calendar = require('./modules/calendar');
 		Calendar.getCalendars(req.params.year, req.params.month, function(err,data){ sendJSON(res,err,data); });
 	});
+
+	app.get('/api/me', function(req,res) {
+		 res.json(req.user ? req.user : null);
+	});
+
 
 	// AUTHENTICATION
 	// =========================================================
@@ -114,7 +62,74 @@ module.exports = function(app) {
 		req.logout();
 		res.redirect('/');
 	});
-	// FRONT-END routes
+
+	
+	// RESTRICTED API
+	// =========================================================
+	//read
+	app.get('/api/*', function(req,res,next){
+		if(req.user) {
+			console.log('Auth OK', req.user);
+			next();
+		} else {
+			console.log('Auth failed');
+			sendJSON(res, 'Authentication required', null);
+		}
+	});
+	app.get('/api/:model', function(req,res,next){
+		console.log('route check : model');
+		if(['roster','user','volunteer'].indexOf(req.params.model)<0) {
+			sendJSON(res, 'Wrong parameters', null);
+			return;
+		}
+		else next();
+	})
+	app.get('/api/:model/:p1?/:p2?', function(req, res) {
+		console.log('GET', req.params);
+		var CRUD = require('./modules/crud')(req.params.model);
+		CRUD.get(req.params, function(err,data){
+			console.log('DATA', data);
+			sendJSON(res,err,data);
+		});
+	});
+	// create/update
+	app.post('/api/:model/:p1?/:p2?', function(req, res) {
+		var CRUD = require('./modules/crud')(req.params.model);		
+		
+		console.log('update existing '+':'+req.params.username);
+		CRUD.update({'username':req.params.username}, req.body, function(err,data){ 
+			if(err || !data) {
+				CRUD.create(req.body, function(err,data){ sendJSON(res,err,data); });
+			} else {
+				sendJSON(res,err,data);
+			}
+		});
+		
+	});
+	// delete (deleting user deletes assoctiated volunteer as well)
+	app.delete('/api/user/:username', function(req,res){
+		var Volunteer = require('./modules/crud')('volunteer');
+		console.log('delete volunteer :'+req.params.username);
+		Volunteer.remove({'username':req.params.username}, function(err, volunteerData){
+			if(err)
+				sendJSON(res,err,volunteerData);
+			else {
+				var User = require('./modules/crud')('user');
+				User.remove({'username':req.params.username}, function(err, userData){
+					sendJSON(res,err,userData); 
+				});
+			}
+		});
+		
+	});
+	app.delete('/api/volunteer/:username', function(req,res){
+		var Volunteer = require('./modules/crud')('volunteer');
+		//console.log('delete volunteer :'+req.params.username);
+		Volunteer.remove(req.params, function(err, volunteerData){
+			sendJSON(res,err,volunteerData);
+		});
+		
+	});	// FRONT-END routes
 	// =========================================================
 	// handled by Angular in /public/js/routes.js
 	app.get('*', function(req, res) {
