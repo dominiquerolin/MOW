@@ -30,20 +30,20 @@ angular.module('appRoutes', [])
 	            templateUrl: 'views/user/list.html',
 	            controller: 'UserListCtrl',
 	            auth: {
-	            	roles: [1,2]
+	            	roles: [1,2] //@TODO: only use the lowest authorized role
 	            }
 	        })
 	        .when('/users/:username', {
 	            templateUrl: 'views/user/profile.html',
 	            controller: 'UserCtrl',
-	            data: {	            	
+	            auth: {	            	
 	            	authorizedRoles: [0,1,2]
 	            }
 	        })
 	        .when('/volunteers', {
 	            templateUrl: 'views/volunteer/list.html',
 	            controller: 'VolunteerListCtrl',
-	            data: {	            	
+	            auth: {	            	
 	            	authorizedRoles: [1,2]
 	            }
 	        })
@@ -51,7 +51,7 @@ angular.module('appRoutes', [])
 	            templateUrl: 'views/volunteer/profile.html',
 	            controller: 'VolunteerCtrl',
 	            action:'contact',
-	            data: {	            	
+	            auth: {	            	
 	            	authorizedRoles: [0,1,2]
 	            }
 	        })
@@ -59,7 +59,7 @@ angular.module('appRoutes', [])
 	            templateUrl: 'views/volunteer/profile.html',
 	            controller: 'VolunteerCtrl',
 	            action:'contact',
-	            data: {	            	
+	            auth: {	            	
 	            	authorizedRoles: [0,1,2]
 	            }
 	        })
@@ -67,7 +67,7 @@ angular.module('appRoutes', [])
 	            templateUrl: 'views/volunteer/profile.html',
 	            controller: 'VolunteerCtrl',
 	            action: 'availability',
-	            data: {	            	
+	            auth: {	            	
 	            	authorizedRoles: [0,1,2]
 	            }
 	        })
@@ -75,8 +75,15 @@ angular.module('appRoutes', [])
 	            templateUrl: 'views/volunteer/profile.html',
 	            controller: 'VolunteerCtrl',
 	            action: 'driver',
-	            data: {	            	
+	            auth: {	            	
 	            	authorizedRoles: [0,1,2]
+	            }
+	        })
+	        .when('/roster', {
+	        	templateUrl: 'views/roster/index.html',
+	        	controller: 'RosterController',
+	        	auth: {	            	
+	            	authorizedRoles: [1,2]
 	            }
 	        });
 	
