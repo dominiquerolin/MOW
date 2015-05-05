@@ -98,7 +98,7 @@ angular.module('Forms', [])
 					};
 					return;
 			}
-			console.log("Form validation passed: submit form to " + post_url);
+			console.log("Form validation passed: submit form to " + post_url, $scope.data);
 
 			$http
 				.post(post_url, $scope.data)
@@ -109,7 +109,7 @@ angular.module('Forms', [])
 						// Action after success
 						switch(frm.$name) {					
 							case 'Register':
-								$location.path('/volunteers/'+ $scope.data.username);
+								$location.path('/volunteers/'+ result.data.username);
 								break;
 							default:
 								frm.$setPristine();

@@ -30,7 +30,7 @@ module.exports = function(app) {
 
 	app.post('/api/register', function(req, res) {
 		//console.log('register new user',req)
-	    User.register(new User({ username : req.body.username }), req.body.password, function(err, data) {
+	    User.register(new User({ username : req.body.username, email: req.body.email }), req.body.password, function(err, data) {
 	        if (err) {
 	        	return sendJSON(res,err.message,data);
 	        }
@@ -72,15 +72,15 @@ module.exports = function(app) {
 	
 	app.all('/api/*', function(req,res,next){
 		if(req.user) {
-			console.log('Auth OK', req.user);
+			//console.log('Auth OK', req.user);
 			next();
 		} else {
-			console.log('Auth failed');
+			//console.log('Auth failed');
 			sendJSON(res, 'Authentication required', null);
 		}
 	});
 	app.all('/api/:model/:p1?/:p2?', function(req,res,next){
-		console.log('route check : model');
+		//console.log('route check : model');
 		if(['roster','user','volunteer'].indexOf(req.params.model)<0) {
 			sendJSON(res, 'Wrong parameters', null);
 			return;
