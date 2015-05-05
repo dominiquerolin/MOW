@@ -1,10 +1,10 @@
-var expect = require("chai").expect;
+var expect = require("chai").expect,
+	should = require("should");
 var mongoose       = require('mongoose');
 var db = require('../config/db');
 var User = require('../app/modules/crud')('user');
 
 var new_user = {username:'new_user', email:'user@me.com', password:'user'};
-var existing_user = {username:'eraserqueen'};
 var bad_user = {username:'tonyabott'};
 
 var db;
@@ -13,12 +13,9 @@ describe('User', function(){
 	
 	before(function(done) {
         db = mongoose.connect(db.url, function(err) {
-    		if(err) console.log("Cannot connect to DB");
-    		else {
-    			console.log("Connected to DB");
-    		}
+    		if(err) return done(err); 
+            done();
     	});
-        done();
     });
 
     after(function(done) {
@@ -39,47 +36,94 @@ describe('User', function(){
 		expect(typeof(User.remove)).to.equal('function');
 	});
 	describe('#User.create()', function(){
-		it('should return false when argument is not valid', function(){
-			User.create('Invalid argument', function(u){
-				expect(u.status).to.equal(false);
-				expect(u.message).to.equal('Invalid argument');					
+		it('should return an error when argument is not valid', function(done){
+			User.create('Invalid argument', function(err, u){
+				//console.log(err, u);
+				should.exist(err);
+				should.not.exist(u);
+				done();
 			});
 		});
-		it('should return false when argument is incomplete', function(){
-			User.create({username:'new_user'}, function(u){
-				expect(u.status).to.equal(false);
-				expect(u.message).to.contain('Missing argument');					
+		it('should return an error when argument is incomplete', function(done){
+			User.create({'username':'new_user'}, function(err, u){
+				//console.log(err, u);
+				should.exist(err);
+				should.not.exist(u);
+				done();
 			});
 		});
-		it('should return a single user when argument contains all required properties', function(){
-			User.create(new_user, function(u){
-				expect(u.status).to.equal(true);
-				expect(u.data.username).to.equal(new_user.username);	
+		it('should return a single user when argument contains all required properties', function(done){
+			User.create(new_user, function(err, u){
+				//console.log(err, u);
+				should.not.exist(err);
+				should.exist(u);
+				expect(u.username).to.equal(new_user.username);
+				expect(u.email).to.equal(new_user.email);
+				expect(u.password).to.exist;
+				done();
 			});
 		});
 	});
 	describe('#User.get()', function(){
-		it('should return an array of users when no argument is passed', function(){
-			User.get(function(u){
-				expect(typeof(u.data)).to.equal('array');
+		it('should return an array of users when no argument is passed', function(done){
+			User.get(null, function(err, u){
+				//console.log(err, u);
+				should.not.exist(err);
+				should.exist(u);
+				expect(u).to.be.a('array');
+				done();
 			});				
 		});
-		it('should return an error when argument is not valid', function(){
-			User.get('Invalid argument', function(u){
-				expect(u.status).to.equal(false);
-				expect(u.message).to.equal('Invalid argument');					
+		it('should return an error when argument is not valid', function(done){
+			User.get('Invalid argument', function(err, u){
+				//console.log(err, u);
+				should.exist(err);
+				should.not.exist(u);
+				done();
 			});
 		});
-		it('should return an error when user not found', function(){
-			User.get(bad_user, function(u){
-				expect(u.status).to.equal(false);
-				expect(u.message).to.equal('User not found');					
+		it('should return null when user not found', function(done){
+			User.get(bad_user, function(err, u){
+				//console.log(err, u);
+				should.not.exist(err);
+				should.not.exist(u);
+				done();
 			});
 		});
-		it('should return a single user when an object is passed as argument', function(){
-			User.get(existing_user, function(u){
-				expect(u.status).to.equal(true);
-				expect(u.data.username).to.equal(existing_user.username);					
+		it('should return a single user when an object is passed as argument', function(done){
+			User.get(new_user, function(err, u){
+				//console.log(err, u);
+				should.not.exist(err);
+				should.exist(u);
+				expect(u.username).to.equal(new_user.username);
+				done();
+			});
+		});
+	});
+	describe('#User.delete()', function(){
+		it('should return an error when argument is invalid', function(done){
+			User.remove('Invalid argument', function(err, u){
+				//console.log(err, u);
+				should.exist(err);
+				should.not.exist(u);
+				done();
+			});
+		});
+		it('should return a single user after deletion', function(done){
+			User.remove(new_user, function(err,u){
+				//console.log(err, u);
+				should.not.exist(err);
+				expect(u).to.be.a('object');
+				expect(u.username).to.equal(new_user.username);
+				done();
+			})
+		});
+		it('should not have the user in the db after deletion', function(done){
+			User.get(new_user, function(err, u) {
+				//console.log(err, u);
+				should.not.exist(err);
+				should.not.exist(u);
+				done();
 			});
 		});
 	});

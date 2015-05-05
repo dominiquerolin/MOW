@@ -6,7 +6,7 @@ MOW.constant('AUTH_EVENTS', {
 MOW.factory('AuthService', ['$http', 'Session', function($http, Session){
 	var auth = {};
 	auth.login = function(credentials){
-		return $http.post('/login', credentials)
+		return $http.post('/api/login', credentials)
 		.success(function(res){
 			console.log('AuthService.login OK');
 			if(res.status) {
@@ -18,7 +18,7 @@ MOW.factory('AuthService', ['$http', 'Session', function($http, Session){
 		});
 	};
 	auth.logout = function(){
-		return $http.post('/logout')
+		return $http.post('/api/logout')
 		.success(function(res){
 			console.log('AuthService.logout OK');
 			Session.destroy();

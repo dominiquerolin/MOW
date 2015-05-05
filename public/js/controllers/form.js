@@ -78,7 +78,7 @@ angular.module('Forms', [])
 			var post_url = '';
 			switch (frm.$name) {
 				case 'Register':
-					post_url = '/register';
+					post_url = '/api/register';
 					break;
 				case 'User':
 					post_url = '/api/user/' + $scope.data.username;					

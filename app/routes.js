@@ -28,7 +28,7 @@ module.exports = function(app) {
 	var passport = require('passport');
 	var User = require('./models/user');
 
-	app.post('/register', function(req, res) {
+	app.post('/api/register', function(req, res) {
 		//console.log('register new user',req)
 	    User.register(new User({ username : req.body.username }), req.body.password, function(err, data) {
 	        if (err) {
@@ -40,23 +40,26 @@ module.exports = function(app) {
 	        });
 	    });
 	});
-	app.post('/login', function(req, res, next) {
-        console.log('POST /login');
+	app.post('/api/login', function(req, res, next) {
+        console.log('POST /api/login');
 		passport.authenticate('local', function(err, data, msg) {
-	        //console.log('authenticate with passport');
-			if(err)
+	        console.log('authenticate with passport');
+			if(err){
+				console.log('Error authenticating');
 				return sendJSON(res,'Error authenticating',data,msg);
-			if(!data)
+			}
+			if(!data) {
+				console.log('Wrong username or password');
 				return sendJSON(res,'Wrong username or password',data,msg);
-
+			}
 			req.login(data, function(err) {
-		        //console.log('login with passport', req.user);
+		        console.log('login with passport', req.user);
 				return sendJSON(res, err, data, (err?null:'Logged in'));
 			});
 		})(req, res, next);
 	});
 	
-	app.post('/logout', function(req, res) {
+	app.post('/api/logout', function(req, res) {
 		req.user = null;
 		req.session.passport = null;
 		req.logout();
@@ -66,8 +69,8 @@ module.exports = function(app) {
 	
 	// RESTRICTED API
 	// =========================================================
-	//read
-	app.get('/api/*', function(req,res,next){
+	
+	app.all('/api/*', function(req,res,next){
 		if(req.user) {
 			console.log('Auth OK', req.user);
 			next();
@@ -76,18 +79,30 @@ module.exports = function(app) {
 			sendJSON(res, 'Authentication required', null);
 		}
 	});
-	app.get('/api/:model', function(req,res,next){
+	app.all('/api/:model/:p1?/:p2?', function(req,res,next){
 		console.log('route check : model');
 		if(['roster','user','volunteer'].indexOf(req.params.model)<0) {
 			sendJSON(res, 'Wrong parameters', null);
 			return;
 		}
-		else next();
+		else {
+			if(!req.params.p1)
+				req.search = null;
+			else if(req.params.model == 'roster') {	
+				if(req.params.p1 && !req.params.p2)
+					sendJSON(res, 'Missing parameter "ord".', null);
+				else
+					req.search = {day: req.params.p1, ord: req.params.p2};
+			} else {
+				req.search = {username: req.params.p1};
+			}
+			next();
+		}
 	})
 	app.get('/api/:model/:p1?/:p2?', function(req, res) {
 		console.log('GET', req.params);
 		var CRUD = require('./modules/crud')(req.params.model);
-		CRUD.get(req.params, function(err,data){
+		CRUD.get(req.search, function(err,data){
 			console.log('DATA', data);
 			sendJSON(res,err,data);
 		});
@@ -95,9 +110,7 @@ module.exports = function(app) {
 	// create/update
 	app.post('/api/:model/:p1?/:p2?', function(req, res) {
 		var CRUD = require('./modules/crud')(req.params.model);		
-		
-		console.log('update existing '+':'+req.params.username);
-		CRUD.update({'username':req.params.username}, req.body, function(err,data){ 
+		CRUD.update(req.search, req.body, function(err,data){ 
 			if(err || !data) {
 				CRUD.create(req.body, function(err,data){ sendJSON(res,err,data); });
 			} else {
@@ -109,13 +122,12 @@ module.exports = function(app) {
 	// delete (deleting user deletes assoctiated volunteer as well)
 	app.delete('/api/user/:username', function(req,res){
 		var Volunteer = require('./modules/crud')('volunteer');
-		console.log('delete volunteer :'+req.params.username);
-		Volunteer.remove({'username':req.params.username}, function(err, volunteerData){
+		Volunteer.remove(req.params, function(err, volunteerData){
 			if(err)
 				sendJSON(res,err,volunteerData);
 			else {
 				var User = require('./modules/crud')('user');
-				User.remove({'username':req.params.username}, function(err, userData){
+				User.remove(req.params, function(err, userData){
 					sendJSON(res,err,userData); 
 				});
 			}
