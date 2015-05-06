@@ -13,10 +13,13 @@ angular.module('User', [])
 		console.log("UserCtrl");
 
 		$http.get('/api/user/'+$routeParams.username)
-		.success(function(user) {
-			$scope.data = user.data;
-			$scope.roles = ['User','Admin','SuperAdmin'];
-
+		.success(function(res) {
+			if(res.status) {
+				$scope.data = res.data;
+				$scope.roles = ['User','Admin','SuperAdmin'];
+			} else {
+				$scope.alert = res;
+			}
 		})
 		.error(function(err){
 			$scope.alert = {status : false,	message : err };

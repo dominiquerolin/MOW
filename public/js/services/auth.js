@@ -1,5 +1,6 @@
 MOW.constant('AUTH_EVENTS', {
 	loginRequired: 'login-required',
+	loginFailed: 'login-failed',
 	permissionRequired: 'permission-required',
 	sessionTimeout: 'session-timeout'
 });
@@ -7,14 +8,13 @@ MOW.factory('AuthService', ['$http', 'Session', function($http, Session){
 	var auth = {};
 	auth.login = function(credentials){
 		return $http.post('/api/login', credentials)
-		.success(function(res){
-			console.log('AuthService.login OK');
-			if(res.status) {
-				Session.create(res.data);
+		.then(function(res){
+			if(res.data.status) {
+				console.log('AuthService.login OK');
+				return Session.create(res.data.data)["User"];
+			} else {
+				console.log('AuthService.login Failed');
 			}
-		})
-		.error(function(){
-			console.log('AuthService.login ERR');
 		});
 	};
 	auth.logout = function(){
@@ -33,7 +33,9 @@ MOW.factory('AuthService', ['$http', 'Session', function($http, Session){
 	};
 	auth.isAuthorized = function(roles){
 		if(!angular.isArray(roles)) roles = [roles];
-		return roles.indexOf(Session.User.role)!=-1;
+		var authorized = roles.indexOf(Session.User.role)!=-1;
+		console.log('isAuthorized?', authorized, roles, Session.User.role);
+		return authorized;
 	};
 	return auth;
 }]);

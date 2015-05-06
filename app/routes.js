@@ -85,6 +85,10 @@ module.exports = function(app) {
 			sendJSON(res, 'Wrong parameters', null);
 			return;
 		}
+		else if(req.user.role<1 && req.params.p1!=req.user.username) {
+			sendJSON(res, 'Permission required', null);
+			return;
+		}
 		else {
 			if(!req.params.p1)
 				req.search = null;

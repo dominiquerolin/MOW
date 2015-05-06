@@ -48,11 +48,11 @@
             <li><a href="/users">Users</a></li>
         </ul>
     </nav>
-    
+    <alert></alert>
 	<login-form ng-show="!authenticated && requiresLogin"></login-form>
 	
     <!-- ANGULAR DYNAMIC CONTENT -->
-    <div ng-view ng-if="authenticated || !requiresLogin"></div>
+    <div ng-view ng-if="(authenticated && authorized) || !requiresLogin"></div>
 
 	<debug></debug>
 </div>

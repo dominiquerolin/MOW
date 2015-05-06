@@ -6,8 +6,10 @@ angular.module('Forms', [])
 		'$scope',
 		'$rootScope',
 		'AuthService',
-		'$location',
-		function($scope, $rootScope, AuthService, $location) {
+		'AUTH_EVENTS',
+		'$route', '$location',
+		'Session',
+		function($scope, $rootScope, AuthService, AUTH_EVENTS, $route, $location, Session) {
 			$scope.credentials = {
 				username : '',
 				password : ''
@@ -26,30 +28,19 @@ angular.module('Forms', [])
 					.login(credentials)
 					.then(
 						function(res) {
-							console.log('after: AuthService.login');
-							$scope.alert = res.data;
-							$rootScope.authenticated = AuthService.isAuthenticated();
-							console.log('isAuthenticated:',$rootScope.authenticated);
-							if($rootScope.authenticated) {
-								$rootScope.authenticated = true;
+							var authenticated = $rootScope.authenticated = AuthService.isAuthenticated();
+							if(authenticated) {
+								if(!$rootScope.redirectTo) $rootScope.redirectTo = '/users/' + Session.User.username;  
 								console.log('Redirect after login', $rootScope.redirectTo);
-								$location.path($rootScope.redirectTo ? $rootScope.redirectTo : '/users/' + credentials.username, true);
-							}
+								$location.path($rootScope.redirectTo, false);
+								$route.reload();
+							} else {
+								$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+							}								
+						
 						});
 			}
 		} ])
-.directive("loginForm", ['AUTH_EVENTS', function(AUTH_EVENTS) {
-	return {
-		restrict : 'E',
-		templateUrl : 'views/user/login.html',
-		link : function (scope) {
-			scope.$on('$routeChangeStart', function(){scope.requiresLogin = false;});
-			scope.$on(AUTH_EVENTS.loginRequired, function(){scope.requiresLogin = true;});
-			scope.$on(AUTH_EVENTS.sessionTimeout, function(){scope.requiresLogin = true;});
-		}
-
-	};
-}])
 // Generic
 .controller('FormController',[
 	'$scope',

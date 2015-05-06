@@ -37,14 +37,14 @@ angular.module('appRoutes', [])
 	            templateUrl: 'views/user/profile.html',
 	            controller: 'UserCtrl',
 	            auth: {	            	
-	            	authorizedRoles: [0,1,2]
+	            	roles: [0,1,2]
 	            }
 	        })
 	        .when('/volunteers', {
 	            templateUrl: 'views/volunteer/list.html',
 	            controller: 'VolunteerListCtrl',
 	            auth: {	            	
-	            	authorizedRoles: [1,2]
+	            	roles: [1,2]
 	            }
 	        })
 	        .when('/volunteers/:username', {
@@ -52,7 +52,7 @@ angular.module('appRoutes', [])
 	            controller: 'VolunteerCtrl',
 	            action:'contact',
 	            auth: {	            	
-	            	authorizedRoles: [0,1,2]
+	            	roles: [0,1,2]
 	            }
 	        })
 	        .when('/volunteers/:username/contact', {
@@ -60,7 +60,7 @@ angular.module('appRoutes', [])
 	            controller: 'VolunteerCtrl',
 	            action:'contact',
 	            auth: {	            	
-	            	authorizedRoles: [0,1,2]
+	            	roles: [0,1,2]
 	            }
 	        })
 	        .when('/volunteers/:username/availability', {
@@ -68,7 +68,7 @@ angular.module('appRoutes', [])
 	            controller: 'VolunteerCtrl',
 	            action: 'availability',
 	            auth: {	            	
-	            	authorizedRoles: [0,1,2]
+	            	roles: [0,1,2]
 	            }
 	        })
 	        .when('/volunteers/:username/driver', {
@@ -76,14 +76,14 @@ angular.module('appRoutes', [])
 	            controller: 'VolunteerCtrl',
 	            action: 'driver',
 	            auth: {	            	
-	            	authorizedRoles: [0,1,2]
+	            	roles: [0,1,2]
 	            }
 	        })
 	        .when('/roster', {
 	        	templateUrl: 'views/roster/index.html',
 	        	controller: 'RosterController',
 	        	auth: {	            	
-	            	authorizedRoles: [1,2]
+	            	roles: [1,2]
 	            }
 	        });
 	
